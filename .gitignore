@@ -1,7 +1,10 @@
 *.o
+*.a
+*.dbg
+*.or
 *.ppu
+# *.lps
 FreeShip
-FreeShip.or
 Units/backup/
 backup/
 hortlog
