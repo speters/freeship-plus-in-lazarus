@@ -1,4 +1,10 @@
 # Zips files for binary distribution
+
+if ! [ -e FreeShip ] ; then
+        echo "FreeShip binary not found"
+        exit 1
+fi
+
 BLDDT=$(strings FreeShip |grep Build:|cut -f2 -d' ')
 VERS=$(Utils/versinfo FreeShip|grep 'File Full Version:'|cut -f2)
 ARCH=$(file -b FreeShip|cut -f6 -d' '|sed 's/,//')
