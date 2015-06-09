@@ -1,5 +1,5 @@
 prefix ?= /usr
-FS_HOME = $(prefix)/share/freeship
+FS_HOME = $(prefix)/share/FreeShip
 FS_APP = $(FS_HOME)
 
 all: build build-utils
