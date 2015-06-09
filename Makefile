@@ -17,7 +17,7 @@ clean:
 
 distclean: clean
 
-build:
+build: build-icons
 	lazbuild -B -r --widgetset=qt FreeShip.lpi
 
 build-win32:

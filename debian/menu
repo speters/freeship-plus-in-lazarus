@@ -1,0 +1,6 @@
+?package(freeship):\
+  needs="X11"\
+  section="Applications/Graphics"\
+  title="FreeShip"\
+  command="/usr/bin/FreeShip"\
+  icon="/usr/share/pixmaps/freeship.xpm"
