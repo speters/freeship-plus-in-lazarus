@@ -8,7 +8,10 @@ clean:
 	rm -f FreeShip.dbg
 
 build:
-	lazbuild -B --widgetset=qt FreeShip.lpi
+	lazbuild -B -r --widgetset=qt FreeShip.lpi
+
+build-win32:
+	lazbuild -B -r --widgetset=qt --os=win32 --cpu=i386 FreeShip.lpi
 
 build-utils: versinfo
 

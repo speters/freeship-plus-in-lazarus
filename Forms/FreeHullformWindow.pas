@@ -116,7 +116,7 @@ type
                            BackgroundScale: TAction;
                            Setscale1: TMenuItem;
                            BackgroundTransparentColor: TAction;
-                           ransparentcolor1: TMenuItem;
+                           Transparentcolor1: TMenuItem;
                            Backgroundclear: TAction;
                            Clear1: TMenuItem;
                            BackgroundBlending: TAction;

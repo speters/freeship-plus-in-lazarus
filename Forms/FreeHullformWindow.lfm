@@ -1,7 +1,7 @@
 object FreeHullWindow: TFreeHullWindow
-  Left = 584
+  Left = 564
   Height = 285
-  Top = 108
+  Top = 88
   Width = 440
   Caption = 'FreeHullWindow'
   ClientHeight = 285
@@ -16,7 +16,7 @@ object FreeHullWindow: TFreeHullWindow
   OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poDefault
-  LCLVersion = '1.4.0.2'
+  LCLVersion = '1.4.0.4'
   Visible = True
   object ScrollBar1: TScrollBar
     Left = 0
@@ -469,10 +469,10 @@ object FreeHullWindow: TFreeHullWindow
       object Setscale1: TMenuItem
         Action = BackgroundScale
       end
-      object ransparentcolor1: TMenuItem
+      object Transparentcolor1: TMenuItem
         Action = BackgroundTransparentColor
       end
-      object olerance1: TMenuItem
+      object Tolerance1: TMenuItem
         Action = BackgroundTolerance
       end
       object Blending1: TMenuItem
