@@ -5400,7 +5400,10 @@ var I          : Integer;
     Dialog     : TOpenDialog;
     Pt         : TPoint;
     P2D        : T2DCoordinate;
-    Bmp        : TBitmap;
+    Bmp        : TCustomBitmap;
+
+            Stream: TStream;
+  GraphicClass: TGraphicClass;
 begin
    Data:=nil;
    for I:=1 to Owner.NumberofBackgroundImages do if Owner.BackgroundImage[I-1].AssignedView=Viewport.ViewType then Data:=Owner.BackgroundImage[I-1];
@@ -5412,7 +5415,8 @@ begin
 
    Dialog:=TOpenDialog.Create(Viewport);
    Dialog.InitialDir:=Owner.Preferences.ImportDirectory;
-   Dialog.Filter:='All files (*.jpg;*.bmp)|*.jpg; *.bmp|Jpeg images (*.jpg)|*.jpg|Bitmap files (*.bmp)|*.bmp|';
+   Dialog.Filter := GraphicFileMask(TGraphic);
+   //Dialog.Filter:='All files (*.jpg; *.jpeg; *.bmp; *.gif)|*.jpg; *.jpeg; *.bmp; *.gif|Jpeg images (*.jpg; *.jpeg)|*.jpg; *.jpeg|Bitmap files (*.bmp)|*.bmp|GIF files (*.gif)|*.gif';
    Dialog.Options:=[ofHideReadOnly];
    if Dialog.Execute then
    begin
@@ -5422,6 +5426,23 @@ begin
          FOwner.FBackgroundImages.Add(Data);
       end;
       Data.Clear;
+
+      Stream := nil;
+      try
+        Stream := TFileStream.Create(UTF8ToSys(Dialog.Filename), fmOpenRead or fmShareDenyNone);
+        GraphicClass := GetGraphicClassForFileExtension(ExtractFileExt(Dialog.Filename));
+        if (GraphicClass <> nil) and (GraphicClass.InheritsFrom(TCustomBitmap)) then
+        begin
+          Bmp := TCustomBitmap(GraphicClass.Create);
+          Bmp.LoadFromStream(Stream);
+          Data.FImageData.Assign(Bmp);
+          Bmp.Destroy;
+          Data.FQuality:=100;
+        end;
+      finally
+        Stream.Free;
+      end;
+        (*
       if Uppercase(ExtractFileExt(Dialog.Filename))='.JPG' then
       begin
          Data.FImageData.LoadFromFile(Dialog.FileName);
@@ -5434,6 +5455,7 @@ begin
          Bmp.Destroy;
          Data.FQuality:=100;
       end;
+      *)
       if not Data.FImageData.Empty then
       begin
          Data.FAssignedView:=Viewport.ViewType;
