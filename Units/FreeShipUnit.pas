@@ -688,12 +688,10 @@ type
                                     procedure   Edit;
                                     procedure   Load;
                                     procedure   LoadFromIni(Filename: string);
-                                    procedure   LoadFromDta(Filename: string);
                                     procedure   ResetColors;
                                     procedure   ResetDirectories;
                                     procedure   SetDefaults;
                                     procedure   Save;
-                                    procedure   SaveToDta;
                                     property    Owner                : TFreeShip read FOwner write FOwner;
                                  published
                                     // General options
@@ -13972,95 +13970,6 @@ begin
   {$endif}
 end;
 
-procedure TFreePreferences.LoadFromDta(Filename: String);
-var
-    FFile   : TextFile;
-    I,N     : Integer;
-    T,L,W,H,S:Integer;
-begin
-   //Filename:=ChangeFileExt(Application.ExeName,'.dta');
-   if FileExists(Filename) then
-   begin
-      AssignFile(FFile,Filename);
-      Try
-         clear;
-         Reset(FFile);
-         Readln(FFile,FPointSize);
-         Readln(FFile,FButtockColor);
-         Readln(FFile,FWaterlineColor);
-         Readln(FFile,FStationColor);
-         Readln(FFile,FCreaseColor);
-         Readln(FFile,FCreaseEdgeColor);
-         Readln(FFile,FGridColor);
-         Readln(FFile,FGridFontColor);
-         Readln(FFile,FEdgeColor);
-         Readln(FFile,FCreasePointColor);
-         Readln(FFile,FRegularPointColor);
-         Readln(FFile,FCornerPointColor);
-         Readln(FFile,FDartPointColor);
-         Readln(FFile,FSelectColor);
-         Readln(FFile,FLayerColor);
-         Readln(FFile,FUnderWaterColor);
-         Readln(FFile,FNormalColor);
-         Readln(FFile,FViewportColor);
-         if not EOF(FFile) then readln(FFile,FOpenDirectory);
-         if not EOF(FFile) then readln(FFile,FSaveDirectory);
-         if not EOF(FFile) then readln(FFile,FImportDirectory);
-         if not EOF(FFile) then readln(FFile,FExportDirectory);
-         if not EOF(FFile) then readln(FFile,FDiagonalColor);
-         if not EOF(FFile) then
-         begin
-            // load recent files
-            Readln(FFile,N);
-            Owner.Edit.FRecentFiles.Clear;
-            Owner.Edit.FRecentFiles.Capacity:=N;
-            for I:=1 to N do
-            begin
-               Readln(FFile,Filename);
-               // only add the file to the list if it is a valid filename
-               if FileExists(Filename+'.fbm') then Owner.Edit.FRecentFiles.Add(Filename);
-            end;
-            if assigned(Owner.FOnUpdateRecentFileList) then Owner.FOnUpdateRecentFileList(self);
-         end;
-         if not EOF(FFile) then Readln(FFile,FLeakPointColor);
-         if not EOF(FFile) then readln(FFile,FMarkerColor);
-         if not EOF(FFile) then Readln(FFile,FCurvaturePlotColor);
-         if not EOF(FFile) then Readln(FFile,FControlCurveColor);
-         if not EOF(FFile) then readln(FFile,FHydrostaticsFontColor);
-         if not EOF(FFile) then readln(FFile,FZebraStripeColor);
-         if not EOF(FFile) then
-         begin
-            Readln(FFile,T,L,H,W,S);
-            if Application.Mainform<>nil then
-            begin
-               if L>Screen.Width then L:=0;
-               if T>Screen.Height then T:=0;
-               case TWindowState(S) of
-                  wsNormal	      : Application.MainForm.SetBounds(L,T,W,H);
-                  wsMinimized	   : begin
-                                      Application.MainForm.WindowState:=wsNormal;
-                                      Application.MainForm.SetBounds(L,T,W,H);
-                                   end;
-                  wsMaximized	   : Application.MainForm.WindowState:=wsMaximized;
-               end;
-            end;
-         end;
-         if not EOF(FFile) then Readln(FFile,FLanguage)
-                           else FLanguage:='English';
-         FLanguageFile:=ExtractFilePath(Application.Exename)+'Languages/'+Flanguage+'.ini';
-         if not FileExists(FLanguageFile) then
-           begin
-           FLanguage:='English';
-           FLanguageFile:=ExtractFilePath(Application.Exename)+'Languages/'+FLanguage+'.ini';
-           end;
-         if not EOF(FFile) then Readln(FFile,FMaxUndoMemory);
-         CloseFile(FFile);
-      except
-         MessageDlg(Userstring(176)+':'+EOL+Filename,mtError,[mbOk],0);
-      end;
-   end;
-end;{TFreePreferences.LoadFromDta}
-
 procedure TFreePreferences.LoadFromIni(FileName: String);
 var
     I,N     : Integer;
@@ -14178,7 +14087,7 @@ end;
 
 
 procedure TFreePreferences.Load;
-var GlobalConfigFileName, UserConfigFileName,DtaFilename: string;
+var GlobalConfigFileName, UserConfigFileName: string;
     I,N     : Integer;
     T,L,W,H,S:Integer;
     params:TColorIniFile;
@@ -14187,16 +14096,6 @@ begin
   setDefaults;
   GlobalConfigFileName:=getGlobalConfigDirectory+'/FreeShip.ini';
   UserConfigFileName:=getUserConfigDirectory+'/FreeShip.ini';
-
-  // just for migration from .dta to .ini
-  if not FileExistsUTF8(GlobalConfigFileName)
-     and not FileExistsUTF8(UserConfigFileName)
-  then
-   begin
-     DtaFilename:=ChangeFileExt(Application.ExeName,'.dta');
-     LoadFromDta(DtaFilename);
-     exit;
-   end;
 
   LoadFromIni(GlobalConfigFileName);
   LoadFromIni(UserConfigFileName);
@@ -14229,56 +14128,6 @@ begin
    FHydrostaticsFontColor:=clMaroon;
    FZebraStripeColor:=RGB(230,230,230);
 end;{TFreePreferences.ResetColors}
-
-procedure TFreePreferences.SaveToDta; //deprecated
-var FileName: string;
-    FFile   : TextFile;
-    I       : Integer;
-begin
-   Filename:=ChangeFileExt(Application.ExeName,'.dta');
-   AssignFile(FFile,Filename);
-   Try
-      Rewrite(FFile);
-      Writeln(FFile,FPointSize);
-      Writeln(FFile,FButtockColor);
-      Writeln(FFile,FWaterlineColor);
-      Writeln(FFile,FStationColor);
-      Writeln(FFile,FCreaseColor);
-      Writeln(FFile,FCreaseEdgeColor);
-      Writeln(FFile,FGridColor);
-      Writeln(FFile,FGridFontColor);
-      Writeln(FFile,FEdgeColor);
-      Writeln(FFile,FCreasePointColor);
-      Writeln(FFile,FRegularPointColor);
-      Writeln(FFile,FCornerPointColor);
-      Writeln(FFile,FDartPointColor);
-      Writeln(FFile,FSelectColor);
-      Writeln(FFile,FLayerColor);
-      Writeln(FFile,FUnderWaterColor);
-      Writeln(FFile,FNormalColor);
-      Writeln(FFile,FViewportColor);
-      Writeln(FFile,FOpenDirectory);
-      Writeln(FFile,FSaveDirectory);
-      Writeln(FFile,FImportDirectory);
-      Writeln(FFile,FExportDirectory);
-      Writeln(FFile,FDiagonalColor);
-      // save list with recently used files
-      writeln(FFile,Owner.Edit.RecentFileCount);
-      for I:=1 to Owner.Edit.RecentFileCount do Writeln(FFile,Owner.Edit.RecentFile[I-1]);
-      Writeln(FFile,FLeakPointColor);
-      Writeln(FFile,FMarkerColor);
-      Writeln(FFile,FCurvaturePlotColor);
-      Writeln(FFile,FControlCurveColor);
-      Writeln(FFile,FHydrostaticsFontColor);
-      Writeln(FFile,FZebraStripeColor);
-      Writeln(FFile,Application.Mainform.Top,#32,Application.Mainform.Left,#32,Application.Mainform.Height,#32,Application.Mainform.Width,#32,Ord(Application.MainForm.WindowState));
-      Writeln(FFile,FLanguageFile);
-      Writeln(FFile,FMaxUndoMemory);
-      CloseFile(FFile);
-   except
-      MessageDlg(Userstring(177)+':'+EOL+Filename,mtError,[mbOk],0);
-   end;
-end;{TFreePreferences.Save}
 
 procedure TFreePreferences.Save;
 var FileName: String;
