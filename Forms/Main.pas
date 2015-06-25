@@ -940,17 +940,17 @@ end;{TMainForm.ExitProgramExecute}
 
 procedure TMainForm.FormShow(Sender: TObject);
 
-  procedure LoadMenuImages(imagedir: string; var ToolBar: TToolBar);
+  procedure LoadMenuImages(imagedir: string; origImagesList: TImageList; var ToolBar: TToolBar);
 
   var
     newImagesList: TImageList;
+    tilist: TCustomImageList;
     iconname: string;
     iconindex: TImageIndex;
     bmp: TCustomBitmap;
     i, j: Integer;
 
     iconnameIndex: Array of string;
-
 
     (* from lazarus/examples/imagelist/unit1.pas *)
     function LoadBitmapFromFile(AFileName: string): TCustomBitmap;
@@ -974,17 +974,14 @@ procedure TMainForm.FormShow(Sender: TObject);
     end;
 
   begin
-    SetLength(iconnameIndex, ToolBar.Images.Count);
-    for i := 0 to ToolBar.Images.Count - 1 do
-    begin
-       iconnameIndex[i] := 'notfound';
-    end;
-
-    newImagesList := TImageList.Create(self);
+    SetLength(iconnameIndex, origImagesList.Count);
+    newImagesList := TImageList.Create(origImagesList);
 
     // TODO: more efficient search
-    for i := 0 to ToolBar.Images.Count - 1 do
+    for i := 0 to origImagesList.Count - 1 do
     begin
+       iconnameIndex[i] := 'notfound';
+
        for j:= 0 to ToolBar.ButtonList.Count - 1 do
        begin
           if (ToolBar.Buttons[j].ImageIndex = i) then
@@ -996,7 +993,7 @@ procedure TMainForm.FormShow(Sender: TObject);
        end;
     end;
 
-    for i := 0 to ToolBar.Images.Count - 1 do
+    for i := 0 to origImagesList.Count - 1 do
     begin
       bmp := LoadBitmapFromFile(ExtractFilePath(imagedir) + iconnameIndex[i] + '.png');
 
@@ -1004,7 +1001,8 @@ procedure TMainForm.FormShow(Sender: TObject);
       begin
         newImagesList.Width := bmp.Width;
         newImagesList.Height := bmp.Height;
-        iconindex := newImagesList.Add(bmp, nil);
+        // iconindex := newImagesList.Add(bmp, nil);
+        newImagesList.Insert(i, bmp, nil);
 
         if iconindex = -1 then
         begin
@@ -1014,7 +1012,7 @@ procedure TMainForm.FormShow(Sender: TObject);
 
     end;
 
-    if Toolbar.Images.Count = newImagesList.Count then // All icons loaded?
+    if origImagesList.Count = newImagesList.Count then // All icons loaded?
     begin
       Toolbar.Images := newImagesList;
 
@@ -1023,8 +1021,11 @@ procedure TMainForm.FormShow(Sender: TObject);
          ToolBar.Buttons[i].AutoSize := true;
          ToolBar.Buttons[i].Height := bmp.Height;
 
-         ToolBar.Buttons[i].Hint :=  iconnameIndex[i] + ', ImageIndex(old)=' + IntToStr(ToolBar.Buttons[i].ImageIndex) +  ', iconindex=' +  IntToStr(i);
-
+         (*
+         ToolBar.Buttons[i].GetCurrentIcon(tilist, j);
+         ToolBar.Buttons[i].Hint :=  iconnameIndex[i] + ', ImageIndex(old)=' + IntToStr(ToolBar.Buttons[i].ImageIndex) +  ', iconindex=' +  IntToStr(j);
+         if (j>=0) then if iconnameIndex[j] <> 'notfound' then  writeln('mv tb' +      IntToStr(j) + '.png ' + iconnameIndex[j] + '.png');
+         *)
       end;
 
       Toolbar.AutoSize := true;
@@ -1046,7 +1047,7 @@ begin
    FreeShip.Preferences.Load;
    FreeShip.Clear;
 
-   LoadMenuImages(FreeShip.Preferences.ImportDirectory, Toolbar);
+   LoadMenuImages(FreeShip.Preferences.ImportDirectory, MenuImages, Toolbar);
 
    if FFileName = '' then
      LoadMostRecentFile
