@@ -941,12 +941,16 @@ end;{TMainForm.ExitProgramExecute}
 procedure TMainForm.FormShow(Sender: TObject);
 
   procedure LoadMenuImages(imagedir: string; var ToolBar: TToolBar);
+
   var
     newImagesList: TImageList;
     iconname: string;
     iconindex: TImageIndex;
     bmp: TCustomBitmap;
-    i: Integer;
+    i, j: Integer;
+
+    iconnameIndex: Array of string;
+
 
     (* from lazarus/examples/imagelist/unit1.pas *)
     function LoadBitmapFromFile(AFileName: string): TCustomBitmap;
@@ -970,14 +974,31 @@ procedure TMainForm.FormShow(Sender: TObject);
     end;
 
   begin
+    SetLength(iconnameIndex, ToolBar.Images.Count);
+    for i := 0 to ToolBar.Images.Count - 1 do
+    begin
+       iconnameIndex[i] := 'notfound';
+    end;
+
     newImagesList := TImageList.Create(self);
 
-    for i := 0 to ToolBar.ButtonList.Count - 1 do
+    // TODO: more efficient search
+    for i := 0 to ToolBar.Images.Count - 1 do
     begin
-      // extract icon names from the toolbutton's name
-      iconname := LowerCase(ToolBar.Buttons[i].Name);
+       for j:= 0 to ToolBar.ButtonList.Count - 1 do
+       begin
+          if (ToolBar.Buttons[j].ImageIndex = i) then
+          begin
+            // extract icon names from the toolbutton's name
+            iconnameIndex[i] := LowerCase(ToolBar.Buttons[j].Name);
+            break;
+          end;
+       end;
+    end;
 
-      bmp := LoadBitmapFromFile(ExtractFilePath(imagedir) + iconname + '.png');
+    for i := 0 to ToolBar.Images.Count - 1 do
+    begin
+      bmp := LoadBitmapFromFile(ExtractFilePath(imagedir) + iconnameIndex[i] + '.png');
 
       if bmp <> nil then
       begin
@@ -987,26 +1008,32 @@ procedure TMainForm.FormShow(Sender: TObject);
 
         if iconindex = -1 then
         begin
-             //debugln('Loading ' + ExtractFilePath(imagedir) + iconname + '.png' + ' failed.');
+             //debugln('Loading ' + ExtractFilePath(imagedir) + iconnameIndex[i] + '.png' + ' failed.');
         end;
-
-        // TODO: Fix permuted icons
-        ToolBar.Buttons[i].ImageIndex := iconindex;
-
-        ToolBar.Buttons[i].AutoSize := true;
-        ToolBar.Buttons[i].Height := bmp.Height;
       end;
 
     end;
+
+    if Toolbar.Images.Count = newImagesList.Count then // All icons loaded?
+    begin
+      Toolbar.Images := newImagesList;
+
+      for i:= 0 to ToolBar.ButtonList.Count - 1 do
+      begin
+         ToolBar.Buttons[i].AutoSize := true;
+         ToolBar.Buttons[i].Height := bmp.Height;
+
+         ToolBar.Buttons[i].Hint :=  iconnameIndex[i] + ', ImageIndex(old)=' + IntToStr(ToolBar.Buttons[i].ImageIndex) +  ', iconindex=' +  IntToStr(i);
+
+      end;
+
+      Toolbar.AutoSize := true;
+      Toolbar.ButtonHeight := newImagesList.Height + 8;
+      //Toolbar.Height := Toolbar.ButtonHeight + 5;  // TODO: Not needed due to AutoSize?
+    end;
+
     bmp.Free;
-
-    // TODO: Make transparency work...
-
-    Toolbar.Images := newImagesList;
-    Toolbar.AutoSize := true;
-    Toolbar.ButtonHeight := newImagesList.Height + 8;
-    //Toolbar.Height :=     Toolbar.ButtonHeight + 5;  // TODO: Not needed due to AutoSize?
-
+    iconnameIndex := nil;
   end;
 
 begin
@@ -1019,7 +1046,7 @@ begin
    FreeShip.Preferences.Load;
    FreeShip.Clear;
 
-   LoadMenuImages(FreeShip.Preferences.ResourceDirectory, Toolbar);
+   LoadMenuImages(FreeShip.Preferences.ImportDirectory, Toolbar);
 
    if FFileName = '' then
      LoadMostRecentFile
