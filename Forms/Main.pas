@@ -939,6 +939,76 @@ if FileExistsUTF8('Sterns.txt') { *Converted from FileExists* } then DeleteFileU
 end;{TMainForm.ExitProgramExecute}
 
 procedure TMainForm.FormShow(Sender: TObject);
+
+  procedure LoadMenuImages(imagedir: string; var ToolBar: TToolBar);
+  var
+    newImagesList: TImageList;
+    iconname: string;
+    iconindex: TImageIndex;
+    bmp: TCustomBitmap;
+    i: Integer;
+
+    (* from lazarus/examples/imagelist/unit1.pas *)
+    function LoadBitmapFromFile(AFileName: string): TCustomBitmap;
+    var
+      Stream: TStream;
+      GraphicClass: TGraphicClass;
+    begin
+      Result := nil;
+      Stream := nil;
+      try
+        Stream := TFileStream.Create(UTF8ToSys(AFileName), fmOpenRead or fmShareDenyNone);
+        GraphicClass := GetGraphicClassForFileExtension(ExtractFileExt(AFileName));
+        if (GraphicClass <> nil) and (GraphicClass.InheritsFrom(TCustomBitmap)) then
+        begin
+          Result := TCustomBitmap(GraphicClass.Create);
+          Result.LoadFromStream(Stream);
+        end;
+      finally
+        Stream.Free;
+      end;
+    end;
+
+  begin
+    newImagesList := TImageList.Create(self);
+
+    for i := 0 to ToolBar.ButtonList.Count - 1 do
+    begin
+      // extract icon names from the toolbutton's name
+      iconname := LowerCase(ToolBar.Buttons[i].Name);
+
+      bmp := LoadBitmapFromFile(ExtractFilePath(imagedir) + iconname + '.png');
+
+      if bmp <> nil then
+      begin
+        newImagesList.Width := bmp.Width;
+        newImagesList.Height := bmp.Height;
+        iconindex := newImagesList.Add(bmp, nil);
+
+        if iconindex = -1 then
+        begin
+             //debugln('Loading ' + ExtractFilePath(imagedir) + iconname + '.png' + ' failed.');
+        end;
+
+        // TODO: Fix permuted icons
+        ToolBar.Buttons[i].ImageIndex := iconindex;
+
+        ToolBar.Buttons[i].AutoSize := true;
+        ToolBar.Buttons[i].Height := bmp.Height;
+      end;
+
+    end;
+    bmp.Free;
+
+    // TODO: Make transparency work...
+
+    Toolbar.Images := newImagesList;
+    Toolbar.AutoSize := true;
+    Toolbar.ButtonHeight := newImagesList.Height + 8;
+    //Toolbar.Height :=     Toolbar.ButtonHeight + 5;  // TODO: Not needed due to AutoSize?
+
+  end;
+
 begin
    self.WindowState := wsNormal;
 
@@ -948,6 +1018,8 @@ begin
    FreeShip.OnSelectItem:=FOnSelectItem;
    FreeShip.Preferences.Load;
    FreeShip.Clear;
+
+   LoadMenuImages(FreeShip.Preferences.ResourceDirectory, Toolbar);
 
    if FFileName = '' then
      LoadMostRecentFile
