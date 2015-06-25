@@ -1057,6 +1057,7 @@ begin
   {$ifdef LCLQt}
    inherited Cascade;
   {$else}
+  {$ifndef Windows}
   // do manual cascade for non MDI environments
   MW := Self.Width;
   MH := Self.Height + 30;
@@ -1069,6 +1070,7 @@ begin
    HFW := MDIChildren[i];
    HFW.SetBounds(L+i*40,T+MH+i*40,W,HFW.Height);
    end;
+  {$endif}
   {$endif}
 end;{TMainForm.Cascade}
 
