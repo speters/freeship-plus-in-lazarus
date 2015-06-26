@@ -939,6 +939,99 @@ if FileExistsUTF8('Sterns.txt') { *Converted from FileExists* } then DeleteFileU
 end;{TMainForm.ExitProgramExecute}
 
 procedure TMainForm.FormShow(Sender: TObject);
+
+  procedure LoadMenuImages(imagedir: string; var ToolBar: TToolBar);
+
+  var
+    newImagesList: TImageList;
+    tilist: TCustomImageList;
+    iconname: string;
+    iconindex: TImageIndex;
+    bmp: TCustomBitmap;
+    i, j: Integer;
+
+    iconnameIndex: Array of string;
+
+    (* from lazarus/examples/imagelist/unit1.pas *)
+    function LoadBitmapFromFile(AFileName: string): TCustomBitmap;
+    var
+      Stream: TStream;
+      GraphicClass: TGraphicClass;
+    begin
+      Result := nil;
+      Stream := nil;
+      try
+        Stream := TFileStream.Create(UTF8ToSys(AFileName), fmOpenRead or fmShareDenyNone);
+        GraphicClass := GetGraphicClassForFileExtension(ExtractFileExt(AFileName));
+        if (GraphicClass <> nil) and (GraphicClass.InheritsFrom(TCustomBitmap)) then
+        begin
+          Result := TCustomBitmap(GraphicClass.Create);
+          Result.LoadFromStream(Stream);
+        end;
+      finally
+        Stream.Free;
+      end;
+    end;
+
+  begin
+    SetLength(iconnameIndex, ToolBar.Images.Count);
+    newImagesList := TImageList.Create(ToolBar.Images);
+
+    // TODO: more efficient search
+    for i := 0 to ToolBar.Images.Count - 1 do
+    begin
+       iconnameIndex[i] := 'notfound';
+
+       for j:= 0 to ToolBar.ButtonList.Count - 1 do
+       begin
+          if (ToolBar.Buttons[j].Style = tbsButton) and (ToolBar.Buttons[j].ImageIndex = i) then
+          begin
+            // extract icon names from the toolbutton's name
+            // TODO: Check if it would be better to use the toolbutton's Caption instead
+            iconnameIndex[i] := LowerCase(ToolBar.Buttons[j].Name);
+            break;
+          end;
+       end;
+    end;
+
+    for i := 0 to ToolBar.Images.Count - 1 do
+    begin
+      bmp := LoadBitmapFromFile(ExtractFilePath(imagedir) + iconnameIndex[i] + '.png');
+
+      if bmp <> nil then
+      begin
+        newImagesList.Width := bmp.Width;
+        newImagesList.Height := bmp.Height;
+        iconindex := newImagesList.Add(bmp, nil);
+
+        if iconindex = -1 then
+        begin
+             //debugln('Loading ' + ExtractFilePath(imagedir) + iconnameIndex[i] + '.png' + ' failed.');
+        end;
+      end;
+
+    end;
+
+    if ToolBar.Images.Count = newImagesList.Count then
+    begin
+      // All icons loaded, so switch over to the new ones...
+      Toolbar.Images := newImagesList;
+
+      for i:= 0 to ToolBar.ButtonList.Count - 1 do
+      begin
+         ToolBar.Buttons[i].AutoSize := true;
+         ToolBar.Buttons[i].Height := bmp.Height;
+      end;
+
+      Toolbar.AutoSize := true;
+      Toolbar.ButtonHeight := newImagesList.Height + 6;
+      //Toolbar.Height := Toolbar.ButtonHeight + 2;  // TODO: Not needed due to AutoSize?
+    end;
+
+    bmp.Free;
+    iconnameIndex := nil;
+  end;
+
 begin
    self.WindowState := wsNormal;
 
@@ -948,6 +1041,9 @@ begin
    FreeShip.OnSelectItem:=FOnSelectItem;
    FreeShip.Preferences.Load;
    FreeShip.Clear;
+
+   // TODO: Use proper directory to load new MenuImages from
+   LoadMenuImages(FreeShip.Preferences.InitDirectory + '/icons/', Toolbar);
 
    if FFileName = '' then
      LoadMostRecentFile
@@ -1057,6 +1153,7 @@ begin
   {$ifdef LCLQt}
    inherited Cascade;
   {$else}
+  {$ifndef Windows}
   // do manual cascade for non MDI environments
   MW := Self.Width;
   MH := Self.Height + 30;
@@ -1069,6 +1166,7 @@ begin
    HFW := MDIChildren[i];
    HFW.SetBounds(L+i*40,T+MH+i*40,W,HFW.Height);
    end;
+  {$endif}
   {$endif}
 end;{TMainForm.Cascade}
 
