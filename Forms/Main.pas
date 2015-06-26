@@ -940,7 +940,7 @@ end;{TMainForm.ExitProgramExecute}
 
 procedure TMainForm.FormShow(Sender: TObject);
 
-  procedure LoadMenuImages(imagedir: string; origImagesList: TImageList; var ToolBar: TToolBar);
+  procedure LoadMenuImages(imagedir: string; var ToolBar: TToolBar);
 
   var
     newImagesList: TImageList;
@@ -974,26 +974,27 @@ procedure TMainForm.FormShow(Sender: TObject);
     end;
 
   begin
-    SetLength(iconnameIndex, origImagesList.Count);
-    newImagesList := TImageList.Create(origImagesList);
+    SetLength(iconnameIndex, ToolBar.Images.Count);
+    newImagesList := TImageList.Create(ToolBar.Images);
 
     // TODO: more efficient search
-    for i := 0 to origImagesList.Count - 1 do
+    for i := 0 to ToolBar.Images.Count - 1 do
     begin
        iconnameIndex[i] := 'notfound';
 
        for j:= 0 to ToolBar.ButtonList.Count - 1 do
        begin
-          if (ToolBar.Buttons[j].ImageIndex = i) then
+          if (ToolBar.Buttons[j].Style = tbsButton) and (ToolBar.Buttons[j].ImageIndex = i) then
           begin
             // extract icon names from the toolbutton's name
+            // TODO: Check if it would be better to use the toolbutton's Caption instead
             iconnameIndex[i] := LowerCase(ToolBar.Buttons[j].Name);
             break;
           end;
        end;
     end;
 
-    for i := 0 to origImagesList.Count - 1 do
+    for i := 0 to ToolBar.Images.Count - 1 do
     begin
       bmp := LoadBitmapFromFile(ExtractFilePath(imagedir) + iconnameIndex[i] + '.png');
 
@@ -1001,8 +1002,7 @@ procedure TMainForm.FormShow(Sender: TObject);
       begin
         newImagesList.Width := bmp.Width;
         newImagesList.Height := bmp.Height;
-        // iconindex := newImagesList.Add(bmp, nil);
-        newImagesList.Insert(i, bmp, nil);
+        iconindex := newImagesList.Add(bmp, nil);
 
         if iconindex = -1 then
         begin
@@ -1012,25 +1012,20 @@ procedure TMainForm.FormShow(Sender: TObject);
 
     end;
 
-    if origImagesList.Count = newImagesList.Count then // All icons loaded?
+    if ToolBar.Images.Count = newImagesList.Count then
     begin
+      // All icons loaded, so switch over to the new ones...
       Toolbar.Images := newImagesList;
 
       for i:= 0 to ToolBar.ButtonList.Count - 1 do
       begin
          ToolBar.Buttons[i].AutoSize := true;
          ToolBar.Buttons[i].Height := bmp.Height;
-
-         (*
-         ToolBar.Buttons[i].GetCurrentIcon(tilist, j);
-         ToolBar.Buttons[i].Hint :=  iconnameIndex[i] + ', ImageIndex(old)=' + IntToStr(ToolBar.Buttons[i].ImageIndex) +  ', iconindex=' +  IntToStr(j);
-         if (j>=0) then if iconnameIndex[j] <> 'notfound' then  writeln('mv tb' +      IntToStr(j) + '.png ' + iconnameIndex[j] + '.png');
-         *)
       end;
 
       Toolbar.AutoSize := true;
-      Toolbar.ButtonHeight := newImagesList.Height + 8;
-      //Toolbar.Height := Toolbar.ButtonHeight + 5;  // TODO: Not needed due to AutoSize?
+      Toolbar.ButtonHeight := newImagesList.Height + 6;
+      //Toolbar.Height := Toolbar.ButtonHeight + 2;  // TODO: Not needed due to AutoSize?
     end;
 
     bmp.Free;
@@ -1047,7 +1042,8 @@ begin
    FreeShip.Preferences.Load;
    FreeShip.Clear;
 
-   LoadMenuImages(FreeShip.Preferences.ImportDirectory, MenuImages, Toolbar);
+   // TODO: Use proper directory to load new MenuImages from
+   LoadMenuImages(FreeShip.Preferences.InitDirectory + '/icons/', Toolbar);
 
    if FFileName = '' then
      LoadMostRecentFile
