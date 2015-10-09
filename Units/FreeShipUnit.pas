@@ -41,7 +41,8 @@ uses SysUtils,// this declaration must be at the start, before the FreeGeometry 
      {$endif}
      {$ifdef LCL}
       Interfaces, LCLIntf, LCLType, LCLProc,
-      LMessages,
+      LMessages, IntfGraphics,
+      FPImage,
       GraphType, GraphMath, Graphics, Controls,
       PrintersDlgs, Printer4Lazarus, FreePrinter,
       FileUtil,
@@ -57,6 +58,8 @@ uses SysUtils,// this declaration must be at the start, before the FreeGeometry 
      ExtCtrls,
      ComCtrls,
      ColorIniFile,
+     ActnList,
+     ImgList,
      FreeTypes,
         FreeVersionUnit,
         FasterList,
@@ -72,7 +75,7 @@ uses SysUtils,// this declaration must be at the start, before the FreeGeometry 
 // FREE!ship uses British imperial format, eg 1 long ton=2240 lbs
 
 
-const FreeShipExtention           = '.fbm';                                                              // Default extention for hull model files
+const FreeShipExtention           = '.ftm';                                                              // Default extention for hull model files
       SelectDistance              = 3;                                                                   // Max. distance in pixels between an item and the cursor in order to be selected
       Threshold                   = 3;                                                                   // The distance that the cursor has to be moved before a controlpoint starts moving
       FontheightFactor            = 140;                                                                 // used for calculating fontheight
@@ -622,6 +625,7 @@ type
      {   Container class for all program settings                                                        }
      {---------------------------------------------------------------------------------------------------}
      TFreePreferences       = class(TPersistent)
+<<<<<<< HEAD
                                  private
                                     FOwner                     : TFreeShip;
                                     FPointSize                 : integer; // Half width of controlpoints in pixels when drawn on screen
@@ -734,6 +738,153 @@ type
                                     property WaterlineColor          : TColor read FWaterlineColor write FWaterlineColor;
                                     property ZebraStripeColor        : TColor read FZebraStripeColor write FZebraStripeColor;
                               end;
+=======
+       private
+          FOwner                     : TFreeShip;
+          FPointSize                 : integer; // Half width of controlpoints in pixels when drawn on screen
+          // Colors
+          FButtockColor              : TColor;
+          FWaterlineColor            : TColor;
+          FStationColor              : TColor;
+          FDiagonalColor             : TColor;
+          FEdgeColor                 : TColor;   // Color of normal edges
+          FCreaseColor               : TColor;   // color of crease edges
+          FCreaseEdgeColor           : TColor;   // color of crease control-edges
+          FGridColor                 : TColor;   // Color of gridlines
+          FGridFontColor             : TColor;   // Color of font with gridlines
+          FCreasePointColor          : TColor;   // Color of crease vertices
+          FRegularPointColor         : TColor;   //
+          FCornerPointColor          : TColor;   // Color of cornerpoints and points with at least 3 crease edges
+          FDartPointColor            : TColor;   //
+          FSelectColor               : TColor;   // Color of selected items
+          FLayerColor                : TColor;   // Default color for new layers
+          FNormalColor               : TColor;   // color of surface normals
+          FUnderWaterColor           : TColor;   // Default color used for shading underwaterpart of the vessel
+          FViewportColor             : TColor;
+          FLeakPointColor            : TColor;
+          FMarkerColor               : TColor;
+          FCurvaturePlotColor        : TColor;
+          FControlCurveColor         : TColor;
+          FHydrostaticsFontColor     : TColor;
+          FZebraStripeColor          : TColor;
+
+          FGlobalConfigDirectory     : string;   // Default directory where FreeShip.ini file is stored
+          FGlobalAppDataDirectory    : string;   // Default directory where FreeShip data and resource files stored
+          FUserConfigDirectory       : string;   // Default directory where users FreeShip.ini file is stored
+          FUserAppDataDirectory      : string;   // Default directory where users FreeShip data and resource files stored
+
+          FExecDirectory             : string;   // directory where users FreeShip 3-rd party executables located
+          FManualsDirectory          : string;   // Manuals directory
+          FTempDirectory             : string;   // 3-rd party executables write/read temp files
+          FMenuIconDirectory         : string;   // Directory where menu icons are 'Themes/Default/icons/16';
+          FToolIconDirectory         : string;   // Directory where toolbar icons are 'Themes/Default/icons/24';
+
+          FThemeName                 : string;
+          FParentThemeName           : string;
+          FMenuIconSize              : integer;
+          FToolIconSize              : integer;
+
+          FInitDirectory             : string;   // Default directory where freeship.exe started
+          FOpenDirectory             : string;   // Default directory to open existing files
+          FSaveDirectory             : string;   // Default directory to save files
+          FImportDirectory           : string;   // Default directory to import files
+          FExportDirectory           : string;   // Default directory to export files
+
+          FLanguagesDirectory        : string;   // Default directory where Language files stored. Default FGlobalAppDataDirectory/Languages
+          FLanguageFile              : String;
+          FLanguage                  : String;
+
+          FMaxUndoMemory             : Integer;  // Max. amount of allowable undo memory in megabytes
+          FFbmEncoding               : string; //encoding that is used to convert national strings from/to FBM files
+          function getGlobalConfigDirectory:string;
+          function getUserAppDataDirectory:string;
+          function getGlobalAppDataDirectory:string;
+          function getUserConfigDirectory:string;
+
+          function FGetExportDirectory:string;
+          function FGetImportDirectory:string;
+          function FGetOpenDirectory:string;
+          function FGetSaveDirectory:string;
+          function FGetInitDirectory:string;
+          procedure FSetViewportColor(Val:TColor);
+       public
+          procedure   Clear;
+          constructor Create(Owner:TFreeShip);
+          procedure   Edit;
+          procedure   Load;
+          procedure   LoadFromIni(Filename: string);
+          procedure   LoadFromDta(Filename: string);
+          procedure   ResetColors;
+          procedure   ResetDirectories;
+          procedure   SetDefaults;
+          procedure   Save;
+          procedure   SaveToDta;
+
+          function    getThemeConfigFile(ThemeName: string): string;
+          function    getParentThemeName(ThemeName: string): string;
+          procedure   getAllThemes(ss:TStrings);
+          procedure   getThemesInDir(dir:string; ss:TStrings);
+          function    GetIconFileName(ThemeName, IconName: string; IconSize:integer): string;
+          procedure   dumpIcons(ImageList:TImageList; ActionList:TActionList);
+          procedure   LoadImageIntoBitmap(Bitmap:TBitmap; Name:string);
+          procedure   LoadImageListByActions(ImageList:TImageList; ActionList:TActionList);
+          procedure   LoadImageIntoList(ImageList:TImageList; Item:integer; Name:string);
+          function    IsThemeCustom(ThemeName: string): boolean;
+          procedure   SaveCustomTheme(Dialog:TForm);
+          procedure   SaveThemeAsCustom(Dialog:TForm);
+          procedure   LoadTheme(ThemeName: String);
+          procedure   LoadThemeIni(FileName: String);
+          procedure   SaveTheme(ThemeName, ParentThemeName:string);
+          property    Owner                : TFreeShip read FOwner write FOwner;
+       published
+          // General options
+          property PointSize               : integer read FPointSize write FPointSize;
+          // Color settings
+          property ButtockColor            : TColor read FButtockColor write FButtockColor;
+          property ControlCurveColor       : TColor read FControlCurveColor write FControlCurveColor;
+          property CornerPointColor        : TColor read FCornerPointColor write FCornerPointColor;
+          property CreaseColor             : TColor read FCreaseColor write FCreaseColor;
+          property CreaseEdgeColor         : TColor read FCreaseEdgeColor write FCreaseEdgeColor;
+          property CurvaturePlotColor      : TColor read FCurvaturePlotColor write FCurvaturePlotColor;
+          property DiagonalColor           : TColor read FDiagonalColor write FDiagonalColor;
+          property GridColor               : TColor read FGridColor write FGridColor;
+          property GridFontColor           : TColor read FGridFontColor write FGridFontColor;
+          property HydrostaticsFontColor   : TColor read FHydrostaticsFontColor write FHydrostaticsFontColor;
+          property ImportDirectory         : string read FGetImportDirectory write FImportDirectory;
+          property EdgeColor               : TColor read FEdgecolor write FEdgeColor;
+          property ExportDirectory         : string read FGetExportDirectory write FExportDirectory;
+          property CreasePointColor        : TColor read FCreasePointColor write FCreasePointColor;
+          property Language                : string read FLanguage write FLanguage;
+          property LanguageFile            : string read FLanguageFile write FLanguageFile;
+          property LayerColor              : TColor Read FLayerColor Write FLayerColor;
+          property LeakPointColor          : TColor read FLeakPointColor write FLeakPointColor;
+          property MarkerColor             : TColor Read FMarkerColor Write FMarkerColor;
+          property MaxUndoMemory           : Integer read FMaxUndoMemory write FMaxUndoMemory;
+          property NormalColor             : TColor read FNormalColor write FNormalColor;
+          property InitDirectory           : string read FGetInitDirectory write FInitDirectory;
+          property OpenDirectory           : string read FGetOpenDirectory write FOpenDirectory;
+          property SaveDirectory           : string read FGetSaveDirectory write FSaveDirectory;
+          property LanguagesDirectory      : string read FLanguagesDirectory write FLanguagesDirectory;
+          property ExecDirectory           : string read FExecDirectory write FExecDirectory;
+          property ManualsDirectory        : string read FManualsDirectory write FManualsDirectory;
+          property TempDirectory           : string read FTempDirectory write FTempDirectory;
+          property StationColor            : TColor read FStationColor write FStationColor;
+          property UnderWaterColor         : TColor read FUnderWaterColor write FUnderWaterColor;
+          property RegularPointColor       : TColor read FRegularPointColor write FRegularPointColor;
+          property DartPointColor          : TColor read FDartPointColor write FDartPointColor;
+          property SelectColor             : TColor read FSelectColor write FSelectColor;
+          property ViewportColor           : TColor read FViewportColor write FSetViewportColor;
+          property WaterlineColor          : TColor read FWaterlineColor write FWaterlineColor;
+          property ZebraStripeColor        : TColor read FZebraStripeColor write FZebraStripeColor;
+
+          property MenuIconDirectory       : string read FMenuIconDirectory write FMenuIconDirectory;
+          property ToolIconDirectory       : string read FToolIconDirectory write FToolIconDirectory;
+          property MenuIconSize            : integer read FMenuIconSize write FMenuIconSize;
+          property ToolIconSize            : integer read FToolIconSize write FToolIconSize;
+          property Theme                   : string read FThemeName;
+          property FbmEncoding             : string read FFbmEncoding write FFbmEncoding;
+     end;
+>>>>>>> a2ff3bc99fd3102143c6cb7a3f8fca3c79e673ee
 
      {---------------------------------------------------------------------------------------------------}
      {                                       TFreeProjectSettings                                        }
@@ -763,6 +914,7 @@ type
                                     FSavePreview                  : Boolean;
                                     FProjectUnderWaterColor       : TColor;
                                     FProjectUnits                 : TFreeUnitType;
+                                    FProjectPrecision             : TFreePrecisionType;
                                     FProjectSimplifyIntersections : boolean;
                                     FFreeHydrostaticCoefficients  : TFreeHydrostaticCoeff;
                                     // General hydrostatics calculation settings
@@ -839,6 +991,7 @@ type
                                     property  ProjectSimplifyIntersections : boolean read FProjectSimplifyIntersections write FSetProjectSimplifyIntersections;
                                     property  ProjectUnderWaterColor       : TColor read FProjectUnderWaterColor write FSetProjectUnderWaterColor;
                                     property  ProjectUnits                 : TFreeUnitType read FProjectUnits write FSetProjectUnits;
+                                    property  ProjectPrecision             : TFreePrecisionType read FProjectPrecision write FProjectPrecision;
                                     property  ProjectWaterDensity          : TFloatType read FProjectWaterDensity write FSetProjectWaterDensity;
                                     property  ProjectWaterTemper           : TFloatType read FProjectWaterTemper write FSetProjectWaterTemper;
                                     property  SavePreview                  : Boolean read FSavePreview write FSetSavePreview;
@@ -878,6 +1031,7 @@ type
                                     FOnUpdateGeometryInfo      : TNotifyEvent;         // This event is raised whenever items are added or deleted from the surface
                                     FFreeLinesplanFrme         : TFrame;
                                     FFilenameSet               : Boolean; // Flag to determine if the filename already has been set
+                                    FModelLoaded               : Boolean; // Flag to determine if the model is created new or loaded.
                                     // The folowing private variables are for moving controlpoints with the mouse
                                     FCurrentlyMoving           : boolean;
                                     FPointHasBeenMoved         : boolean;
@@ -912,6 +1066,7 @@ type
                                     FResistanceRBHSData        : TFreeRBHSSeriesResistanceData;									
                                     FResistanceMHData          : TFreeMHSeriesResistanceData;									
                                     FDesignHydrostatics        : TFreeHydrostaticCalc; // This object calculates hydrostatic data to draw in the viewports
+                                    FFontSize                  : integer;
                                     procedure FBuildValidFrameTable(Destination:TFasterList;CloseAtDeck:Boolean); // Assembles all stations and builds a 2D bodyplan for export to other calculating programs
                                     function  FGetActiveLayer:TFreeSubdivisionlayer;
                                     function  FGetBackgroundImage(Index:Integer):TFreeBackgroundImageData;
@@ -1007,6 +1162,7 @@ type
                                     property    Edit                                   : TFreeEdit read FEdit;                      // Containerclass for all editing commands
                                     property    EditMode                               : TFreeEditMode read FEditMode write FSetEditMode;
                                     property    FilenameSet                            : boolean read FFilenameSet write FFilenameSet;
+                                    property    ModelLoaded                            : boolean read FModelLoaded write FModelLoaded;
                                     property    Flowline[index:integer]                : TFreeFlowline read FGetFlowline;
                                     property    HydrostaticCalculation[index:integer]  : TFreeHydrostaticCalc read FGetHydrostaticCalculation;
                                     property    Layer[index:integer]                   : TFreeSubdivisionLayer read FGetLayer;
@@ -1062,7 +1218,8 @@ type
                                     property    Preferences                            : TFreePreferences read FPreferences;
                                     property    ProjectSettings                        : TFreeProjectSettings read FProjectSettings;
                                     property    Visibility                             : TFreeVisibility read FVisibility;
-                              end;
+                                    property    FontSize                               : integer read FFontSize write FFontSize;
+      end;
 // function to find the corresponding water viscosity based on the density
 function FindWaterViscosity(Temper:TFloatType;Units:TFreeUnitType):TFloatType;
 procedure INEXTR(XX:single;N:integer;Xs,Ws:array of single;var YY:single);
@@ -1118,7 +1275,8 @@ uses Math,
      FreeUndoHistoryDlg,
      FreeCylinderDlg,
      FreeCrosscurvesDlg,
-     FreeLayerDlg;
+     FreeLayerDlg,
+     EnterThemeNameDlg;
 
 { -- mmm. probably not. These funcs are used a lot when data read from files. And the files are not always UTF8
 function Pos(const SearchForText, SearchInText: string): PtrInt;
@@ -3362,7 +3520,7 @@ begin
    AddData(Strings,Mode,';');
    Dialog:=TFreeHydrostaticsDialog.Create(Owner);
    ShowTranslatedValues(Dialog);
-   Strings.SaveToFile('FreeHydrostaticsMode.ShowData.Strings.txt');
+   //Strings.SaveToFile('FreeHydrostaticsMode.ShowData.Strings.txt');
    try
       Dialog.Edit.Lines.BeginUpdate;
       Dialog.Edit.Clear;
@@ -3837,7 +3995,7 @@ begin
             Viewport.BrushStyle:=bsSolid;
             Viewport.PenColor:=Spline.Color;
             Viewport.PenStyle:=Spline.PenStyle;
-            Viewport.DrawingCanvas.Polygon(Pts);
+            Viewport.Polygon(Pts);
          end else
          }
          if DrawIt then
@@ -3865,14 +4023,14 @@ begin
                Viewport.PenStyle:=psSolid;
                for J:=0 to Spline.Fragments do if (J mod 10=0) or (J=0) or (J=Spline.Fragments) then
                begin
-                  Viewport.DrawingCanvas.MoveTo(Pts[J].X,Pts[J].Y);
-                  Viewport.DrawingCanvas.LineTo(CPts[J].X,CPts[J].Y);
+                  Viewport.MoveTo(Pts[J].X,Pts[J].Y);
+                  Viewport.LineTo(CPts[J].X,CPts[J].Y);
                end;
-               Viewport.DrawingCanvas.Polyline(CPts);
+               Viewport.Polyline(CPts);
             end;
             Viewport.PenColor:=Spline.Color;
             Viewport.PenStyle:=Spline.PenStyle;
-            Viewport.DrawingCanvas.Polyline(Pts);
+            Viewport.Polyline(Pts);
          end;
 
          DrawIt:=False;
@@ -3907,14 +4065,14 @@ begin
                Viewport.PenStyle:=psSolid;
                for J:=0 to Spline.Fragments do if (J mod 10=0) or (J=0) or (J=Spline.Fragments) then
                begin
-                  Viewport.DrawingCanvas.MoveTo(Pts[J].X,Pts[J].Y);
-                  Viewport.DrawingCanvas.LineTo(CPts[J].X,CPts[J].Y);
+                  Viewport.MoveTo(Pts[J].X,Pts[J].Y);
+                  Viewport.LineTo(CPts[J].X,CPts[J].Y);
                end;
-               Viewport.DrawingCanvas.Polyline(CPts);
+               Viewport.Polyline(CPts);
             end;
             Viewport.PenColor:=Spline.Color;
             Viewport.PenStyle:=Spline.PenStyle;
-            Viewport.DrawingCanvas.Polyline(Pts);
+            Viewport.Polyline(Pts);
          end;
          
       end;
@@ -4275,10 +4433,10 @@ begin
                Viewport.PenColor:=CurvatureColor;
                for J:=1 to Fragm do if (J mod 4=0) or (J=1) or (J=Fragm) then
                begin
-                  Viewport.DrawingCanvas.MoveTo(PArray1[J-1].X,PArray1[J-1].Y);
-                  Viewport.DrawingCanvas.LineTo(PArray2[J-1].X,PArray2[J-1].Y);
+                  Viewport.MoveTo(PArray1[J-1].X,PArray1[J-1].Y);
+                  Viewport.LineTo(PArray2[J-1].X,PArray2[J-1].Y);
                end;
-               Viewport.DrawingCanvas.Polyline(PArray2);
+               Viewport.Polyline(PArray2);
             end else
             begin
                SetLength(PArray1,Fragm);
@@ -4292,18 +4450,18 @@ begin
             end;
             Viewport.SetPenWidth(1);
             Viewport.PenColor:=Color;
-            Viewport.DrawingCanvas.Pen.Style:=Penstyle;
-            Viewport.DrawingCanvas.Polyline(PArray1);
+            Viewport.PenStyle:=Penstyle;
+            Viewport.Polyline(PArray1);
          end;
          for I:=1 to NumberOfPoints do
          begin
             P3D:=Point[I-1];
             if P3D.X<Owner.ProjectSettings.ProjectMainframeLocation then P3D.Y:=-P3D.Y;
             Pt:=Viewport.Project(P3D);
-            Viewport.DrawingCanvas.MoveTo(Pt.X-Size,Pt.Y-Size);
-            Viewport.DrawingCanvas.LineTo(Pt.X+Size,Pt.Y+Size);
-            Viewport.DrawingCanvas.MoveTo(Pt.X-Size,Pt.Y+Size);
-            Viewport.DrawingCanvas.LineTo(Pt.X+Size,Pt.Y-Size);
+            Viewport.MoveTo(Pt.X-Size,Pt.Y-Size);
+            Viewport.LineTo(Pt.X+Size,Pt.Y+Size);
+            Viewport.MoveTo(Pt.X-Size,Pt.Y+Size);
+            Viewport.LineTo(Pt.X+Size,Pt.Y-Size);
          end;
       end else
       begin
@@ -4311,10 +4469,10 @@ begin
          for I:=1 to NumberOfPoints do
          begin
             Pt:=Viewport.Project(Point[I-1]);
-            Viewport.DrawingCanvas.MoveTo(Pt.X-Size,Pt.Y-Size);
-            Viewport.DrawingCanvas.LineTo(Pt.X+Size,Pt.Y+Size);
-            Viewport.DrawingCanvas.MoveTo(Pt.X-Size,Pt.Y+Size);
-            Viewport.DrawingCanvas.LineTo(Pt.X+Size,Pt.Y-Size);
+            Viewport.MoveTo(Pt.X-Size,Pt.Y-Size);
+            Viewport.LineTo(Pt.X+Size,Pt.Y+Size);
+            Viewport.MoveTo(Pt.X-Size,Pt.Y+Size);
+            Viewport.LineTo(Pt.X+Size,Pt.Y-Size);
          end;
       end;
    end;
@@ -4504,13 +4662,13 @@ begin
       Viewport.BrushColor:=clWhite;
       Viewport.BrushStyle:=bsSolid;
       // Draw entire circle in white;
-      Viewport.DrawingCanvas.Ellipse(Pt.X-Size,Pt.Y-Size,Pt.X+Size,Pt.Y+Size);
+      Viewport.Ellipse(Pt.X-Size,Pt.Y-Size,Pt.X+Size,Pt.Y+Size);
       if Owner.Visibility.ModelView=mvBoth then
       begin
          P3D.Y:=-P3D.Y;
          Pt:=Viewport.Project(P3D);
          // Draw entire circle in white;
-         Viewport.DrawingCanvas.Ellipse(Pt.X-Size,Pt.Y-Size,Pt.X+Size,Pt.Y+Size);
+         Viewport.Ellipse(Pt.X-Size,Pt.Y-Size,Pt.X+Size,Pt.Y+Size);
       end;
    end;
 
@@ -4549,8 +4707,8 @@ begin
          end;
          Viewport.SetPenWidth(1);
          Viewport.PenColor:=FFlowline.Color;
-         Viewport.DrawingCanvas.Pen.Style:=FFlowline.Penstyle;
-         Viewport.DrawingCanvas.Polyline(PArray1);
+         Viewport.PenStyle:=FFlowline.Penstyle;
+         Viewport.Polyline(PArray1);
       end;
    end else
    begin
@@ -9763,7 +9921,7 @@ var Answer     : word;
 begin
    OpenDialog:=TFreeOpenDialog.Create(Owner);
    OpenDialog.InitialDir:=Owner.Preferences.OpenDirectory;
-   OpenDialog.Filter:='FREE!ship files (*.fbm *.ftm)|*.fbm;*.ftm';
+   OpenDialog.Filter:='FREE!ship files (*.ftm *.fbm)|*.ftm;*.fbm';
    Opendialog.Options:=[ofHideReadOnly];
    Opendialog.OnPreview := OnFilePreview;
    Places:=Opendialog.GetPlaces;
@@ -9813,6 +9971,7 @@ begin
      raise Exception.Create('Unsupported file format: '+Ext);
 
    try
+      Owner.ModelLoaded:=false;
       Source.LoadFromFile(FileName);                // Load everything into memory
       Owner.Preferences.OpenDirectory:=ExtractFilePath(FileName);
       //Owner.Filename:=ChangeFileExt(FileName,'.fbm');
@@ -9828,6 +9987,7 @@ begin
       Owner.Draw;
       Owner.FFilenameSet:=True;
       Owner.FStopAskingForFileVersion:=False;
+      Owner.ModelLoaded:=true;
    finally
       Source.Destroy;
       AddToRecentFiles(FileName);
@@ -9872,6 +10032,7 @@ begin
    if Ext = '.fbm'
      then Destination:=TFreeFileBuffer.Create
      else Destination:=TFreeTextBuffer.Create;
+   Destination.Encoding:=Owner.Preferences.FbmEncoding;
    Owner.SaveBinary(Destination);
    Destination.SaveToFile(Owner.Filename);
    Owner.Preferences.SaveDirectory:=ExtractFilePath(Owner.FileName);
@@ -11424,6 +11585,7 @@ begin
    ShowTranslatedValues(FreeNewModelDialog);
    if FreeNewModelDialog.Execute then
    begin
+      Owner.ModelLoaded:=false;
       CreateUndoObject(Userstring(157),True);
       Cols:=FreeNewModelDialog.NCols-1;
       Rows:=FreeNewModelDialog.NRows-1;
@@ -11556,6 +11718,7 @@ begin
 
       Owner.draw;
       Owner.FileChanged:=True;
+      Owner.ModelLoaded:=true;
       if Assigned(Owner.OnUpdateGeometryInfo) then Owner.OnUpdateGeometryInfo(self);
       Result:=true;
       TrvSplines.Destroy;
@@ -13786,6 +13949,7 @@ begin
    FLanguage:='English';
    FLanguageFile:='';
    FMaxUndoMemory:=20;// Max 20Mb undomemory
+   FFbmEncoding:='cp1252';
 end;{TFreePreferences.Clear}
 
 constructor TFreePreferences.Create(Owner:TFreeShip);
@@ -13800,6 +13964,7 @@ var Dialog  : TFreePreferencesDialog;
     Lang: string;
     I       : Integer;
     Dir     : string;
+    StrList : TStringList;
 
    procedure Browse(Dir:string);
    var SearchRec  : TSearchRec;
@@ -13852,9 +14017,20 @@ begin
       end;
    end;
 
+   Dialog.ComboBoxThemes.Text:=FThemeName;
+   StrList := TStringList.Create;
+   StrList.Sorted:=true;
+   StrList.Duplicates:=dupIgnore;
+
+   getAllThemes(StrList);
+
+   Dialog.ComboBoxThemes.Items.Clear;
+   Dialog.ComboBoxThemes.Items.AddStrings(StrList);
+   StrList.Free;
+
    if Dialog.Execute(Owner) then
    begin
-      PointSize:=Dialog.TrackBar1.Position;
+      PointSize:=Dialog.SpinEdit1.Value;
       LayerColor:=Dialog.Panel2.Color;
       UnderWaterColor:=Dialog.Panel5.Color;
       EdgeColor:=Dialog.Panel6.Color;
@@ -13889,6 +14065,9 @@ begin
       FSaveDirectory:=Dialog.EditSaveDir.Text;
       FImportDirectory:=Dialog.EditImportDir.Text;
       FExportDirectory:=Dialog.EditExportDir.Text;
+      //FToolIconDirectory:=Dialog.EditToolIconsDir.Text;
+      FToolIconSize := StrToInt(Dialog.SelectToolIconSize.Text);
+
 
       if Uppercase(Lang)<>Uppercase(FLanguage) then
       begin
@@ -13913,6 +14092,8 @@ begin
          end;
          //else FLanguage:=Lang;
       end;
+
+      FFbmEncoding := String(Dialog.ComboBoxEncoding.Items.Objects[Dialog.ComboBoxEncoding.ItemIndex]);
       FMaxUndoMemory:=Dialog.FreeNumInput1.AsInteger;
 
       if assigned(Owner.FOnFileChanged) then Owner.FOnFileChanged(Owner);
@@ -13921,11 +14102,46 @@ begin
       if assigned(Owner.FOnChangeCursorIncrement) then Owner.FOnChangeCursorIncrement(Owner);
       if assigned(Owner.FOnUpdateGeometryInfo) then Owner.FOnUpdateGeometryInfo(owner);
       Owner.Redraw;
-      Save;
+
+      if Dialog.IsThemeChanged then
+        if IsThemeCustom(Dialog.ComboBoxThemes.Text)
+        then SaveCustomTheme(Dialog)
+        else SaveThemeAsCustom(Dialog);
+
+      if Dialog.IsConfigChanged
+        then Save;
+
    end;
    Dialog.Destroy;
 end;{TFreePreferences.Edit}
 
+
+
+procedure TFreePreferences.SaveCustomTheme(Dialog:TForm);
+var  d: TFreePreferencesDialog;
+begin
+  d := TFreePreferencesDialog(dialog);
+  SaveTheme(FThemeName, FParentThemeName);
+end;
+
+procedure TFreePreferences.SaveThemeAsCustom(Dialog:TForm);
+var  d: TFreePreferencesDialog; t: TEnterThemeNameDlg;
+  r : integer;
+begin
+  d := TFreePreferencesDialog(Dialog);
+  t := TEnterThemeNameDlg.Create(d.Owner);
+  t.EditCustomSchemeName.Text:= 'New Custom Theme';
+  t.Message.Caption := 'Some properties of current scheme "'+d.ComboBoxThemes.Text+'" were changed.'
+     +' Please enter a name to save it as a new custom scheme.';
+  r := t.ShowModal;
+  if r = mrOk then
+    begin
+    FParentThemeName:=FThemeName;
+    FThemeName:=t.EditCustomSchemeName.Text;
+    SaveTheme(FThemeName, FParentThemeName);
+    end;
+  t.Free;
+end;
 
 function TFreePreferences.getGlobalConfigDirectory:string;
 var D:string;
@@ -13970,7 +14186,404 @@ begin
   {$endif}
 end;
 
+<<<<<<< HEAD
 procedure TFreePreferences.LoadFromIni(FileName: String);
+=======
+procedure TFreePreferences.LoadFromDta(Filename: String);
+var
+    FFile   : TextFile;
+    I,N     : Integer;
+    T,L,W,H,S:Integer;
+begin
+   //Filename:=ChangeFileExt(Application.ExeName,'.dta');
+   if FileExists(Filename) then
+   begin
+      AssignFile(FFile,Filename);
+      Try
+         clear;
+         Reset(FFile);
+         Readln(FFile,FPointSize);
+         Readln(FFile,FButtockColor);
+         Readln(FFile,FWaterlineColor);
+         Readln(FFile,FStationColor);
+         Readln(FFile,FCreaseColor);
+         Readln(FFile,FCreaseEdgeColor);
+         Readln(FFile,FGridColor);
+         Readln(FFile,FGridFontColor);
+         Readln(FFile,FEdgeColor);
+         Readln(FFile,FCreasePointColor);
+         Readln(FFile,FRegularPointColor);
+         Readln(FFile,FCornerPointColor);
+         Readln(FFile,FDartPointColor);
+         Readln(FFile,FSelectColor);
+         Readln(FFile,FLayerColor);
+         Readln(FFile,FUnderWaterColor);
+         Readln(FFile,FNormalColor);
+         Readln(FFile,FViewportColor);
+         if not EOF(FFile) then readln(FFile,FOpenDirectory);
+         if not EOF(FFile) then readln(FFile,FSaveDirectory);
+         if not EOF(FFile) then readln(FFile,FImportDirectory);
+         if not EOF(FFile) then readln(FFile,FExportDirectory);
+         if not EOF(FFile) then readln(FFile,FDiagonalColor);
+         if not EOF(FFile) then
+         begin
+            // load recent files
+            Readln(FFile,N);
+            Owner.Edit.FRecentFiles.Clear;
+            Owner.Edit.FRecentFiles.Capacity:=N;
+            for I:=1 to N do
+            begin
+               Readln(FFile,Filename);
+               // only add the file to the list if it is a valid filename
+               if FileExists(Filename+'.fbm') then Owner.Edit.FRecentFiles.Add(Filename);
+            end;
+            if assigned(Owner.FOnUpdateRecentFileList) then Owner.FOnUpdateRecentFileList(self);
+         end;
+         if not EOF(FFile) then Readln(FFile,FLeakPointColor);
+         if not EOF(FFile) then readln(FFile,FMarkerColor);
+         if not EOF(FFile) then Readln(FFile,FCurvaturePlotColor);
+         if not EOF(FFile) then Readln(FFile,FControlCurveColor);
+         if not EOF(FFile) then readln(FFile,FHydrostaticsFontColor);
+         if not EOF(FFile) then readln(FFile,FZebraStripeColor);
+         if not EOF(FFile) then
+         begin
+            Readln(FFile,T,L,H,W,S);
+            if Application.Mainform<>nil then
+            begin
+               if L>Screen.Width then L:=0;
+               if T>Screen.Height then T:=0;
+               case TWindowState(S) of
+                  wsNormal	      : Application.MainForm.SetBounds(L,T,W,H);
+                  wsMinimized	   : begin
+                                      Application.MainForm.WindowState:=wsNormal;
+                                      Application.MainForm.SetBounds(L,T,W,H);
+                                   end;
+                  wsMaximized	   : Application.MainForm.WindowState:=wsMaximized;
+               end;
+            end;
+         end;
+         if not EOF(FFile) then Readln(FFile,FLanguage)
+                           else FLanguage:='English';
+         FLanguageFile:=ExtractFilePath(Application.Exename)+'Languages/'+Flanguage+'.ini';
+         if not FileExists(FLanguageFile) then
+           begin
+           FLanguage:='English';
+           FLanguageFile:=ExtractFilePath(Application.Exename)+'Languages/'+FLanguage+'.ini';
+           end;
+         if not EOF(FFile) then Readln(FFile,FMaxUndoMemory);
+         CloseFile(FFile);
+      except
+         MessageDlg(Userstring(176)+':'+EOL+Filename,mtError,[mbOk],0);
+      end;
+   end;
+end;{TFreePreferences.LoadFromDta}
+
+// Only schemes that are saved in User Config are custom
+function TFreePreferences.IsThemeCustom(ThemeName: string): boolean;
+begin
+   result :=  FileExistsUTF8(Self.FUserConfigDirectory+'/Themes/'+ThemeName+'/theme.ini')
+end;
+
+function TFreePreferences.getThemeConfigFile(ThemeName: string): string;
+begin
+   if FileExistsUTF8(Self.FUserConfigDirectory+'/Themes/'+ThemeName+'/theme.ini')
+   then result := Self.FUserConfigDirectory+'/Themes/'+ThemeName+'/theme.ini'
+   else
+     if FileExistsUTF8(Self.FGlobalConfigDirectory+'/Themes/'+ThemeName+'/theme.ini')
+     then result := Self.FGlobalConfigDirectory+'/Themes/'+ThemeName+'/theme.ini'
+     else
+       if FileExistsUTF8(Self.FUserAppDataDirectory +'/Themes/'+ThemeName+'/theme.ini')
+       then result := Self.FUserAppDataDirectory+'/Themes/'+ThemeName+'/theme.ini'
+       else
+         if FileExistsUTF8(Self.FGlobalAppDataDirectory +'/Themes/'+ThemeName+'/theme.ini')
+         then result := Self.FGlobalAppDataDirectory+'/Themes/'+ThemeName+'/theme.ini'
+         else result := Self.FGlobalAppDataDirectory+'/Themes/Default/theme.ini'
+end;
+
+procedure TFreePreferences.getAllThemes(ss:TStrings);
+begin
+  ss.Clear;
+  getThemesInDir(Self.FUserConfigDirectory+'/Themes',ss);
+  getThemesInDir(Self.FGlobalConfigDirectory+'/Themes',ss);
+  getThemesInDir(Self.FUserAppDataDirectory+'/Themes',ss);
+  getThemesInDir(Self.FGlobalAppDataDirectory+'/Themes',ss);
+end;
+
+procedure TFreePreferences.getThemesInDir(dir:string; ss:TStrings);
+var sr: TSearchRec;
+begin
+  if not DirectoryExistsUTF8(dir) then exit;
+  if FindFirst(dir+'/*',faDirectory,sr)=0 then
+    begin
+    repeat
+    if ((sr.Attr and faDirectory) = faDirectory)
+      and (sr.Name<>'.') and (sr.Name<>'..')
+    then
+      ss.Add(sr.Name);
+    until FindNext(sr)<>0;
+    end;
+  FindClose(sr);
+end;
+
+
+function TFreePreferences.getParentThemeName(ThemeName: string): string;
+var     params:TColorIniFile;
+begin
+  params:=TColorIniFile.Create(getThemeConfigFile(FThemeName));
+  result := params.ReadString('Theme','ParentTheme','');
+  params.Free;
+end;
+
+// finds IconFileName recursively from the current theme and its parents
+function TFreePreferences.GetIconFileName(ThemeName, IconName: string; IconSize:integer): string;
+var subPath, ptn: string;
+begin
+  subPath := '/Themes/'+ThemeName+'/icons/'+ IntToStr(IconSize)+'/'+IconName+'.png';
+  if FileExistsUTF8(Self.FUserConfigDirectory+subPath)
+  then result := Self.FUserConfigDirectory+subPath
+  else
+   if FileExistsUTF8(Self.FGlobalConfigDirectory+subPath)
+   then result := Self.FGlobalConfigDirectory+subPath
+   else
+     if FileExistsUTF8(Self.FUserAppDataDirectory +subPath)
+     then result := Self.FUserAppDataDirectory+subPath
+     else
+       if FileExistsUTF8(Self.FGlobalAppDataDirectory +subPath)
+       then result := Self.FGlobalAppDataDirectory+subPath
+       else
+       begin
+         ptn := getParentThemeName(ThemeName);
+         if (ptn > '') and (ptn<>ThemeName)
+         then result := GetIconFileName(ptn, IconName, IconSize)
+         else result := '';
+       end;
+end;
+
+
+{ this is used just once to dump menu/toolbutton icons }
+procedure TFreePreferences.dumpIcons(ImageList:TImageList; ActionList:TActionList);
+const transpix: TRGBQuad = (rgbBlue:$FF; rgbGreen:$99; rgbRed:$33; rgbReserved:$00);
+var i, II, sz, ilcnt, x,y:integer;
+    A: TAction; AName, IName, IPath:String;
+    cil: TCustomImageList;
+    it:TImageType;
+    bmp, bmp2:TBitmap; bkcl : TColor;
+    png:TPortableNetworkGraphic;
+    img: TLazIntfImage;
+    rimg:TRawImage;
+    //cimg: TFPCustomImage;
+    aFlags : TRawImageQueryFlags;
+    tb:TToolButton;
+    ico:TIcon;
+    ppix: PRGBQuad;
+    pix: TRGBQuad;
+    col, txcol:TFPColor;
+    pngWriter : TLazWriterPNG;
+begin
+  sz := ImageList.Width;
+  cil := TCustomImageList(ImageList);
+  ilcnt := cil.Count;
+  bmp:=TBitmap.Create;
+  bmp.PixelFormat:=pf32bit;
+  bmp.RawImage.Description.AlphaPrec:=8;
+  bmp.Transparent:=true;
+  bmp.SetSize(sz,sz);
+  {
+  bmp2:=TBitmap.Create;
+
+  png:=TPortableNetworkGraphic.Create;
+  png.PixelFormat:=pf32bit;
+  png.SetSize(sz,sz);
+
+  img:=TLazIntfImage.Create(sz,sz);
+  img.DataDescription.BitsPerPixel:=32;
+  img.DataDescription.AlphaPrec:=8;
+  img.DataDescription.Format:=ricfRGBA;
+  //cimg:= TImage.Create(nil);
+  //cimg.Picture.Bitmap:=bmp;
+  }
+  pngWriter := TLazWriterPNG.create;
+  pngWriter.UseAlpha:=true;
+
+
+  for i:=0 to ActionList.ActionCount-1 do
+  begin
+    A := TAction(ActionList.Actions[i]);
+    AName := A.Name;
+    II := A.ImageIndex;
+    if (II > -1) and (II < ilcnt) then
+    begin
+      IPath := 'icons/'+IntToStr(sz)+'/'+AName;
+      //cil.GetBitmap(II, bmp);
+      //bmp.LoadFromIntfImage(img);
+      bmp.Canvas.Brush.Color:=RGB(transpix.rgbRed,transpix.rgbGreen,transpix.rgbBlue);
+      bmp.Canvas.FillRect(0,0,sz,sz);
+      cil.Draw(bmp.Canvas,0,0, II, dsTransparent, itImage);
+      {
+      for y:=bmp.Height-1 downto 0 do
+      begin
+        ppix:=bmp.ScanLine[y];
+        for x:=bmp.Width-1 downto 0 do
+        begin
+          if TColor(ppix^) = TColor(transpix)
+          then
+            ppix.rgbReserved:=$00
+          else
+            ppix.rgbReserved:=$FF;
+          inc(ppix);
+        end;
+      end;
+      }
+
+      img:=bmp.CreateIntfImage;
+      txcol:=TColorToFPColor(RGB(transpix.rgbRed,transpix.rgbGreen,transpix.rgbBlue));
+      for y:=img.Height-1 downto 0 do
+      begin
+        //ppix:=img.GetDataLineStart(y);
+        for x:=img.Width-1 downto 0 do
+        begin
+          col:=img.Colors[x,y];
+          if    (col.Blue=txcol.Blue)
+            and (col.Green=txcol.Green)
+            and (col.Red=txcol.Red)
+          then
+            col.alpha:=$0000
+          else
+            col.alpha:=$FFFF;
+          //col.Red:=0; col.Green:=0; col.Blue:=0;
+          img.Colors[x,y]:=col;
+        end;
+      end;
+
+      img.SaveToFile(IPath+'.png',pngWriter);
+    end;
+  end;
+  bmp.Free;
+  img.Free;
+  pngWriter.Free;
+end;
+
+
+// loads icons from FMenuIconDirectory that is set according to theme and icon size
+procedure TFreePreferences.LoadImageListByActions(ImageList:TImageList; ActionList:TActionList);
+var i, II, sz, ilcnt:integer;
+    A: TAction; AName, IName, IPath, IconFile:String;
+    cil: TCustomImageList;
+    bmp:TBitmap; png: TPortableNetworkGraphic; img: TLazIntfImage;
+begin
+  sz := ToolIconSize;
+  ImageList.Width := sz; ImageList.Height := sz;
+  IPath := ToolIconDirectory;
+  cil := TCustomImageList(ImageList);
+  ilcnt := cil.Count;
+  bmp:=TBitmap.Create;
+  bmp.SetSize(sz,sz);
+  png:=TPortableNetworkGraphic.Create;
+  img:= TLazIntfImage.Create(sz,sz);
+
+  // insert empties, just for count
+  for i:=0 to ActionList.ActionCount-1 do
+    if TAction(ActionList.Actions[i]).ImageIndex > -1 then
+      cil.Add(bmp,nil);
+
+  ilcnt := cil.Count;
+  for i:=0 to ActionList.ActionCount-1 do
+  begin
+    A := TAction(ActionList.Actions[i]);
+    AName := A.Name;
+    II := A.ImageIndex;
+    if (II > -1) then
+    begin
+      IconFile := GetIconFileName(
+         Theme, AName, ToolIconSize);
+      if (IconFile > '') and FileExistsUTF8(IconFile) then
+        if (II < ilcnt) then
+        begin
+          png.LoadFromFile(IconFile);
+          img:=png.CreateIntfImage;
+          //img.LoadFromFile(IPath+'/'+AName+'.png');
+          bmp.LoadFromIntfImage(img);
+          cil.Replace(II,bmp,nil);
+          img.Free;
+        end;
+    end;
+  end;
+  bmp.Free;
+  png.Free;
+end;
+
+// loads icon into Bitmap that is set according to theme and icon size
+procedure TFreePreferences.LoadImageIntoBitmap(Bitmap:TBitmap; Name:string);
+var sz:integer;
+    IName, IPath, IconFile:String;
+    bmp:TBitmap; png: TPortableNetworkGraphic; img: TLazIntfImage;
+begin
+  sz := ToolIconSize;
+  IPath := ToolIconDirectory;
+  bmp:=TBitmap.Create;
+  bmp.SetSize(sz,sz);
+  png:=TPortableNetworkGraphic.Create;
+  img:= TLazIntfImage.Create(sz,sz);
+
+  IconFile := GetIconFileName(Theme, Name, ToolIconSize);
+
+  if (IconFile > '') and FileExistsUTF8(IconFile) then
+    begin
+      png.LoadFromFile(IconFile);
+      img:=png.CreateIntfImage;
+      bmp.LoadFromIntfImage(img);
+      Bitmap.FreeImage;
+      Bitmap.Assign(bmp);
+      img.Free;
+    end;
+  bmp.Free;
+  png.Free;
+end;
+
+// loads icons from FMenuIconDirectory that is set according to theme and icon size
+procedure TFreePreferences.LoadImageIntoList(ImageList:TImageList; Item:integer; Name:string);
+var i, II, sz, ilcnt:integer;
+    A: TAction; IName, IPath, IconFile:String;
+    cil: TCustomImageList;
+    bmp:TBitmap; png: TPortableNetworkGraphic; img: TLazIntfImage;
+begin
+  sz := ToolIconSize;
+  ImageList.Width := sz; ImageList.Height := sz;
+  IPath := ToolIconDirectory;
+  cil := TCustomImageList(ImageList);
+  ilcnt := cil.Count;
+  bmp:=TBitmap.Create;
+  bmp.SetSize(sz,sz);
+  png:=TPortableNetworkGraphic.Create;
+  img:= TLazIntfImage.Create(sz,sz);
+
+  IconFile := GetIconFileName(Theme, Name, ToolIconSize);
+
+  if (Item > ImageList.Count-1) then
+   for i:=ImageList.Count to Item do
+      cil.Add(bmp,nil);
+
+  if (IconFile > '') and FileExistsUTF8(IconFile) then
+    begin
+      png.LoadFromFile(IconFile);
+      img:=png.CreateIntfImage;
+      bmp.LoadFromIntfImage(img);
+      cil.Replace(Item,bmp,nil);
+      img.Free;
+    end;
+  bmp.Free;
+  png.Free;
+end;
+
+procedure TFreePreferences.LoadTheme(ThemeName: String);
+var IniFile: string;
+begin
+  IniFile := self.getThemeConfigFile(ThemeName);
+  LoadThemeIni(IniFile);
+end;
+
+procedure TFreePreferences.LoadThemeIni(FileName: String);
+>>>>>>> a2ff3bc99fd3102143c6cb7a3f8fca3c79e673ee
 var
     I,N     : Integer;
     T,L,W,H,S:Integer;
@@ -13981,6 +14594,9 @@ begin
    then exit;
 
   params := TColorIniFile.create(Filename, false );
+
+  FThemeName := params.ReadString('Theme','Name',FThemeName);
+  FParentThemeName := params.ReadString('Theme','ParentTheme',FParentThemeName);
 
   FPointSize := params.ReadInteger('Graphic','PointSize',FPointSize);
   FButtockColor := params.ReadColor('Graphic','PointSize',FButtockColor);
@@ -14007,7 +14623,19 @@ begin
   FControlCurveColor := params.ReadColor('Graphic','ControlCurveColor',FControlCurveColor);
   FHydrostaticsFontColor := params.ReadColor('Graphic','HydrostaticsFontColor',FHydrostaticsFontColor);
   FZebraStripeColor := params.ReadColor('Graphic','ZebraStripeColor',FZebraStripeColor);
+end;
 
+procedure TFreePreferences.LoadFromIni(FileName: String);
+var
+    I,N     : Integer;
+    T,L,W,H,S:Integer;
+    params:TColorIniFile;
+    RecentFileNames : TStringList;
+begin
+  if not FileExistsUTF8(Filename)
+   then exit;
+
+  params := TColorIniFile.create(Filename, false );
 
   FOpenDirectory := params.ReadString('Directories','OpenDirectory',FOpenDirectory);
   FSaveDirectory := params.ReadString('Directories','SaveDirectory',FSaveDirectory);
@@ -14017,6 +14645,13 @@ begin
   FExecDirectory := params.ReadString('Directories','ExecDirectory',FExecDirectory);
   FManualsDirectory := params.ReadString('Directories','ManualsDirectory',FManualsDirectory);
   FTempDirectory := params.ReadString('Directories','TempDirectory',FTempDirectory);
+
+  //FThemeDirectory := params.ReadString('Directories','ThemeDirectory',FMenuIconDirectory);
+  //FThemeName := params.ReadString('Theme','Name',FThemeName);
+
+  FMenuIconSize := params.ReadInteger('Graphic','MenuIconSize',FMenuIconSize);
+  FToolIconSize := params.ReadInteger('Graphic','ToolIconSize',FToolIconSize);
+  FThemeName := params.ReadString('Graphic','Theme',FThemeName);
 
   RecentFileNames := TStringList.Create;
   params.ReadSectionValues('RecentFiles',RecentFileNames);
@@ -14060,7 +14695,7 @@ begin
   FLanguageFile:=FLanguagesDirectory+'/'+Flanguage+'.ini';
   if not FileExistsUTF8(FLanguageFile) { *Converted from FileExists* }
     then FLanguage:='English';
-
+  FFbmEncoding := params.ReadString('General','FbmEncoding',FbmEncoding);
   FMaxUndoMemory := params.ReadInteger('General','MaxUndoMemory',FMaxUndoMemory);
 end;
 
@@ -14071,18 +14706,34 @@ begin
   FMaxUndoMemory := 20;
   ResetColors;
   ResetDirectories;
+  FMenuIconSize := 16;
+  FToolIconSize := 24;
+  FThemeName := 'Default';
+  FParentThemeName := '';
+  FFbmEncoding := 'cp1252';
 end;
 
 procedure TFreePreferences.ResetDirectories;
+var AppDataDir: String;
 begin
-  FOpenDirectory := self.getUserAppDataDirectory+'/Ships';
-  FSaveDirectory := self.getUserAppDataDirectory+'/Ships';
-  FImportDirectory := self.getUserAppDataDirectory+'/Import';
-  FExportDirectory := self.getUserAppDataDirectory+'/Export';
-  FLanguagesDirectory := self.getGlobalAppDataDirectory+'/Languages';
-  FExecDirectory := self.getGlobalAppDataDirectory+'/Exec';
-  FManualsDirectory := self.getGlobalAppDataDirectory+'/Manuals';
-  FTempDirectory := self.getUserAppDataDirectory+'/Temp';
+  FUserConfigDirectory := getUserConfigDirectory;
+  FGlobalConfigDirectory := getGlobalConfigDirectory;
+  FUserAppDataDirectory := getUserAppDataDirectory;
+  FGlobalAppDataDirectory := getGlobalAppDataDirectory;
+
+  if FGlobalAppDataDirectory <> '' then AppDataDir := FGlobalAppDataDirectory;
+  if FUserAppDataDirectory   <> '' then AppDataDir := FUserAppDataDirectory;
+
+  FOpenDirectory := AppDataDir+'/Ships';
+  FSaveDirectory := AppDataDir+'/Ships';
+  FImportDirectory := AppDataDir+'/Import';
+  FExportDirectory := AppDataDir+'/Export';
+  FLanguagesDirectory := AppDataDir+'/Languages';
+  FExecDirectory := AppDataDir+'/Exec';
+  FManualsDirectory := AppDataDir+'/Manuals';
+  FTempDirectory := AppDataDir+'/Temp';
+  FMenuIconDirectory := AppDataDir+'/Themes/Default/icons/16';
+  FToolIconDirectory := AppDataDir+'/Themes/Default/icons/24';
 end;
 
 
@@ -14094,15 +14745,41 @@ var GlobalConfigFileName, UserConfigFileName: string;
     RecentFileNames : TStrings;
 begin
   setDefaults;
-  GlobalConfigFileName:=getGlobalConfigDirectory+'/FreeShip.ini';
-  UserConfigFileName:=getUserConfigDirectory+'/FreeShip.ini';
 
+  FGlobalConfigDirectory     := self.getGlobalConfigDirectory;
+  FGlobalAppDataDirectory    := self.getGlobalAppDataDirectory;
+  FUserConfigDirectory       := self.getUserConfigDirectory;
+  FUserAppDataDirectory      := self.getUserAppDataDirectory;
+
+  GlobalConfigFileName:=FGlobalConfigDirectory+'/FreeShip.ini';
+  UserConfigFileName:=FUserConfigDirectory+'/FreeShip.ini';
+
+<<<<<<< HEAD
+=======
+  // just for migration from .dta to .ini
+  if not FileExistsUTF8(GlobalConfigFileName)
+     and not FileExistsUTF8(UserConfigFileName)
+  then
+   begin
+     DtaFilename:=ChangeFileExt(Application.ExeName,'.dta');
+     if FileExistsUTF8(DtaFilename) then
+      begin
+       LoadFromDta(DtaFilename);
+       exit;
+      end;
+   end;
+
+>>>>>>> a2ff3bc99fd3102143c6cb7a3f8fca3c79e673ee
   LoadFromIni(GlobalConfigFileName);
   LoadFromIni(UserConfigFileName);
+  LoadTheme(FThemeName);
 end;{TFreePreferences.Load}
 
 procedure TFreePreferences.ResetColors;
 begin
+   FThemeName := 'Default';
+   FParentThemeName := '';
+
    FButtockColor:=$00808040;     // Kind of teal-blue
    FWaterlineColor:=$00808040;   // Kind of teal-blue
    FStationColor:=$00808040;     // Kind of teal-blue
@@ -14129,6 +14806,59 @@ begin
    FZebraStripeColor:=RGB(230,230,230);
 end;{TFreePreferences.ResetColors}
 
+<<<<<<< HEAD
+=======
+procedure TFreePreferences.SaveToDta; //deprecated
+var FileName: string;
+    FFile   : TextFile;
+    I       : Integer;
+begin
+   Filename:=ChangeFileExt(Application.ExeName,'.dta');
+   AssignFile(FFile,Filename);
+   Try
+      Rewrite(FFile);
+      Writeln(FFile,FPointSize);
+      Writeln(FFile,FButtockColor);
+      Writeln(FFile,FWaterlineColor);
+      Writeln(FFile,FStationColor);
+      Writeln(FFile,FCreaseColor);
+      Writeln(FFile,FCreaseEdgeColor);
+      Writeln(FFile,FGridColor);
+      Writeln(FFile,FGridFontColor);
+      Writeln(FFile,FEdgeColor);
+      Writeln(FFile,FCreasePointColor);
+      Writeln(FFile,FRegularPointColor);
+      Writeln(FFile,FCornerPointColor);
+      Writeln(FFile,FDartPointColor);
+      Writeln(FFile,FSelectColor);
+      Writeln(FFile,FLayerColor);
+      Writeln(FFile,FUnderWaterColor);
+      Writeln(FFile,FNormalColor);
+      Writeln(FFile,FViewportColor);
+      Writeln(FFile,FOpenDirectory);
+      Writeln(FFile,FSaveDirectory);
+      Writeln(FFile,FImportDirectory);
+      Writeln(FFile,FExportDirectory);
+      Writeln(FFile,FDiagonalColor);
+      // save list with recently used files
+      writeln(FFile,Owner.Edit.RecentFileCount);
+      for I:=1 to Owner.Edit.RecentFileCount do Writeln(FFile,Owner.Edit.RecentFile[I-1]);
+      Writeln(FFile,FLeakPointColor);
+      Writeln(FFile,FMarkerColor);
+      Writeln(FFile,FCurvaturePlotColor);
+      Writeln(FFile,FControlCurveColor);
+      Writeln(FFile,FHydrostaticsFontColor);
+      Writeln(FFile,FZebraStripeColor);
+      Writeln(FFile,Application.Mainform.Top,#32,Application.Mainform.Left,#32,Application.Mainform.Height,#32,Application.Mainform.Width,#32,Ord(Application.MainForm.WindowState));
+      Writeln(FFile,FLanguageFile);
+      Writeln(FFile,FMaxUndoMemory);
+      CloseFile(FFile);
+   except
+      MessageDlg(Userstring(177)+':'+EOL+Filename,mtError,[mbOk],0);
+   end;
+end;{TFreePreferences.SaveToDta}
+
+>>>>>>> a2ff3bc99fd3102143c6cb7a3f8fca3c79e673ee
 procedure TFreePreferences.Save;
 var FileName: String;
     I,N     : Integer;
@@ -14140,6 +14870,58 @@ begin
     ForceDirectoriesUTF8(ExtractFilePath(Filename));
 
   params := TColorIniFile.create(Filename, false);
+
+  params.WriteString('Directories','OpenDirectory',FOpenDirectory);
+  params.WriteString('Directories','SaveDirectory',FSaveDirectory);
+  params.WriteString('Directories','ImportDirectory',FImportDirectory);
+  params.WriteString('Directories','ExportDirectory',FExportDirectory);
+  params.WriteString('Directories','LanguagesDirectory',FLanguagesDirectory);
+  params.WriteString('Directories','ExecDirectory',FExecDirectory);
+  params.WriteString('Directories','ManualsDirectory',FManualsDirectory);
+  params.WriteString('Directories','TempDirectory',FTempDirectory);
+
+  params.WriteString('Directories','MenuIconDirectory',FMenuIconDirectory);
+  params.WriteString('Directories','ToolIconDirectory',FToolIconDirectory);
+  params.WriteInteger('Graphic','MenuIconSize',FMenuIconSize);
+  params.WriteInteger('Graphic','ToolIconSize',FToolIconSize);
+  params.WriteString('Graphic','Theme',FThemeName);
+
+  for I:=0 to Owner.Edit.FRecentFiles.Count-1 do
+  begin
+     Filename := Owner.Edit.FRecentFiles[I];
+     params.WriteString('RecentFiles', 'File'+IntToStr(I+1), Filename);
+  end;
+
+  if assigned(Owner.FOnUpdateRecentFileList) then Owner.FOnUpdateRecentFileList(self);
+
+  if Application.Mainform<>nil then
+   begin
+   params.WriteInteger('Window','Top',Application.MainForm.Top);
+   params.WriteInteger('Window','Left',Application.MainForm.Left);
+   params.WriteInteger('Window','Height',Application.MainForm.Height);
+   params.WriteInteger('Window','Width',Application.MainForm.Width);
+   params.WriteInteger('Window','State',Integer(Application.MainForm.WindowState));
+   end;
+
+  params.WriteString('General','Language',FLanguage);
+  params.WriteString('General','FbmEncoding',FbmEncoding);
+  params.WriteInteger('General','MaxUndoMemory',FMaxUndoMemory);
+end;
+
+procedure TFreePreferences.SaveTheme(ThemeName, ParentThemeName:string);
+var FileName, DirName: String;
+    params:TColorIniFile;
+begin
+  DirName := self.getUserConfigDirectory+'/Themes/'+ThemeName;
+  FileName := DirName+'/theme.ini';
+
+  if not DirectoryExistsUTF8(DirName) then
+    ForceDirectoriesUTF8(DirName);
+
+  params := TColorIniFile.create(Filename, false);
+
+  params.WriteString('Theme','Name',ThemeName);
+  params.WriteString('Theme','ParentTheme',ParentThemeName);
 
   params.WriteColor('Graphic','PointSize',FPointSize);
   params.WriteColor('Graphic','ButtockColor',FButtockColor);
@@ -14166,38 +14948,7 @@ begin
   params.WriteColor('Graphic','ControlCurveColor',FControlCurveColor);
   params.WriteColor('Graphic','HydrostaticsFontColor',FHydrostaticsFontColor);
   params.WriteColor('Graphic','ZebraStripeColor',FZebraStripeColor);
-
-  params.WriteString('Directories','OpenDirectory',FOpenDirectory);
-  params.WriteString('Directories','SaveDirectory',FSaveDirectory);
-  params.WriteString('Directories','ImportDirectory',FImportDirectory);
-  params.WriteString('Directories','ExportDirectory',FExportDirectory);
-  params.WriteString('Directories','LanguagesDirectory',FLanguagesDirectory);
-  params.WriteString('Directories','ExecDirectory',FExecDirectory);
-  params.WriteString('Directories','ManualsDirectory',FManualsDirectory);
-  params.WriteString('Directories','TempDirectory',FTempDirectory);
-
-  for I:=0 to Owner.Edit.FRecentFiles.Count-1 do
-  begin
-     Filename := Owner.Edit.FRecentFiles[I];
-     params.WriteString('RecentFiles', 'File'+IntToStr(I+1), Filename);
-  end;
-
-  if assigned(Owner.FOnUpdateRecentFileList) then Owner.FOnUpdateRecentFileList(self);
-
-  if Application.Mainform<>nil then
-   begin
-   params.WriteInteger('Window','Top',Application.MainForm.Top);
-   params.WriteInteger('Window','Left',Application.MainForm.Left);
-   params.WriteInteger('Window','Height',Application.MainForm.Height);
-   params.WriteInteger('Window','Width',Application.MainForm.Width);
-   params.WriteInteger('Window','State',Integer(Application.MainForm.WindowState));
-   end;
-
-  params.WriteString('General','Language',FLanguage);
-  params.WriteInteger('General','MaxUndoMemory',FMaxUndoMemory);
-end;
-
-
+end;  {SaveTheme}
 
 {---------------------------------------------------------------------------------------------------}
 {                                       TFreeProjectSettings                                        }
@@ -14553,9 +15304,11 @@ end;{TFreeProjectSettings.Create}
 procedure TFreeProjectSettings.Edit;
 var Dialog : TFreeProjectSettingsDialog;
 begin
+   ProjectPrecision := Owner.Precision;
    Dialog:=TFreeProjectSettingsDialog.Create(Owner);
    Dialog.Edit1.Text:=ProjectName;
    Dialog.UnitBox.ItemIndex:=Ord(ProjectUnits);
+   Dialog.PrecisionBox.ItemIndex:=Ord(ProjectPrecision);
    Dialog.Edit7.Text:=ProjectDesigner;
    Dialog.Edit9.Text:=ProjectComment;
    Dialog.Edit10.Text:=ProjectFileCreatedBy;
@@ -14591,6 +15344,8 @@ begin
       ProjectComment:=Dialog.Edit9.Text;
       ProjectFileCreatedBy:=Dialog.Edit10.Text;
       ProjectUnits:=TFreeUnitType(Dialog.UnitBox.ItemIndex);
+      ProjectPrecision:=TFreePrecisionType(Dialog.PrecisionBox.ItemIndex);
+
       ProjectLength:=Dialog.Length;
       ProjectBeam:=Dialog.Beam;
       ProjectDraft:=Dialog.Draft;
@@ -14614,6 +15369,7 @@ begin
       Owner.Visibility.FShowHydrostLateralArea:=Dialog.CheckBox9.Checked;
       ProjectSimplifyIntersections:=Dialog.CheckBox10.Checked;
       Owner.FileChanged:=True;
+      Owner.Precision:=ProjectPrecision;   //TODO: save and load precision
       Owner.Redraw;
    end;
    Dialog.Destroy;
@@ -15340,13 +16096,16 @@ begin
       2: begin L:=0; T:=150; end;
       3: begin L:=200; T:=150; end;
     end;
-    thumbNail.Canvas.StretchDraw(Rect(L,T,L+200,T+150),Tmp);
+    if Assigned(tmp) then
+      begin
+      thumbNail.Canvas.StretchDraw(Rect(L,T,L+200,T+150),Tmp);
+      Tmp.Destroy;
+      end;
     end;
   Result:=TJPEGImage.Create;
   Result.Assign(thumbNail);
   Result.CompressionQuality:=90;
-  Result.SaveToFile('saved_screenshot.jpg');
-  Tmp.Destroy;
+  //Result.SaveToFile('saved_screenshot.jpg');
   thumbNail.Destroy;
 end;{TFreeShip.FGetPreview}
 
@@ -15373,7 +16132,10 @@ end;{TFreeShip.AdjustMarkers}
 constructor TFreeShip.Create(AOwner:TComponent);
 begin
    Inherited Create(AOwner);
-   FIntersectionDialog:=TFreeIntersectionDialog.Create(self);
+
+   if not (csDesigning in ComponentState) then
+     FIntersectionDialog:=TFreeIntersectionDialog.Create(self);
+
    FEdit:=TFreeEdit.Create(Self);
    FPreferences:=TFreePreferences.Create(self);
    FPreferences.Load;
@@ -15398,8 +16160,11 @@ begin
    FDesignHydrostatics:=TFreeHydrostaticCalc.Create(self);
    ClearUndo;
    Clear;
-   FControlpointForm:=TFreeControlPointForm.Create(Self);
-   FControlpointForm.FreeShip:=self;
+   if not (csDesigning in ComponentState) then
+     begin
+     FControlpointForm:=TFreeControlPointForm.Create(Self);
+     FControlpointForm.FreeShip:=self;
+     end;
 end;{TFreeShip.Create}
 
 procedure TFreeShip.CreateOutputHeader(CalcHeader:string;Strings:TStrings);
@@ -15444,6 +16209,7 @@ begin
    FPrecision:=fpLow;
    FFileVersion:=CurrentVersion;
    FFileChanged:=False;
+   FModelLoaded:=false;
    FSurface.Clear;
    FFilename:=Userstring(179);
    FVisibility.Clear;
@@ -15528,7 +16294,8 @@ destructor TFreeShip.Destroy;
 begin
    Clear;
    ClearUndo;
-   FControlpointForm.Destroy;
+   if Assigned(FControlpointForm)
+     then FControlpointForm.Destroy;
    FMarkers.Destroy;
    FStations.Destroy;
    FButtocks.Destroy;
@@ -15543,7 +16310,8 @@ begin
    FHydrostaticCalculations.Destroy;
    FUndoObjects.Destroy;
    FPreferences.Destroy;
-   FIntersectionDialog.Destroy;
+   if Assigned(FIntersectionDialog)
+      then FIntersectionDialog.Destroy;
    FBackgroundImages.Destroy;
    FFlowlines.Destroy;
    FSelectedFlowlines.Destroy;
@@ -15585,9 +16353,9 @@ var I,Size        : integer;
       Pt:=Viewport.Project(P);
       Viewport.FontName:='Arial';
       Viewport.FontColor:=Preferences.HydrostaticsFontColor;
-      size:=Round(Sqrt(Viewport.Zoom)*7);
-      if size<2 then size:=2;
-      Viewport.FontSize:=size;
+      //size:=Round(Sqrt(Viewport.Zoom)*7);
+      //if size<2 then size:=2;
+      Viewport.FontSize:=FFontSize;
       Size:=Round(Sqrt(Viewport.Zoom)*(Preferences.PointSize+1));
       if size<1 then size:=1;
       Viewport.BrushStyle:=bsClear;
@@ -15596,14 +16364,14 @@ var I,Size        : integer;
       Viewport.BrushColor:=clWhite;
       Viewport.BrushStyle:=bsSolid;
       // Draw entire circle in white;
-      Viewport.DrawingCanvas.Ellipse(Pt.X-Size,Pt.Y-Size,Pt.X+Size,Pt.Y+Size);
+      Viewport.Ellipse(Pt.X-Size,Pt.Y-Size,Pt.X+Size,Pt.Y+Size);
       // Draw upper left part in black
       Viewport.BrushColor:=clBlack;
-      Viewport.DrawingCanvas.Pie(Pt.X-Size,Pt.Y-Size,Pt.X+Size,Pt.Y+Size,Pt.X-1,Pt.Y-Size,Pt.X-Size,Pt.Y-1);
+      Viewport.Pie(Pt.X-Size,Pt.Y-Size,Pt.X+Size,Pt.Y+Size,Pt.X-1,Pt.Y-Size,Pt.X-Size,Pt.Y-1);
       // Draw lower right part in black
-      Viewport.DrawingCanvas.Pie(Pt.X-Size,Pt.Y-Size,Pt.X+Size,Pt.Y+Size,Pt.X-1,Pt.Y+Size,Pt.X+Size,Pt.Y-1);
+      Viewport.Pie(Pt.X-Size,Pt.Y-Size,Pt.X+Size,Pt.Y+Size,Pt.X-1,Pt.Y+Size,Pt.X+Size,Pt.Y-1);
       Viewport.BrushStyle:=bsClear;
-      Viewport.DrawingCanvas.TextOut(Pt.X+2*size,Pt.Y,Text);
+      Viewport.TextOut(Pt.X+2*size,Pt.Y,Text);
     end;{DrawPoint}
 
     procedure DrawGrid;
@@ -15621,19 +16389,26 @@ var I,Size        : integer;
         Pts             : array of TPoint;
 
         procedure SetFontHeight(DesiredHeight:TFloatType);
-        var Height         : TFloatType;
+        var Height         : integer;
             CurrentHeight  : integer;
         begin
            // Sets the fontheight to a height in modelspace
-           Height:=DesiredHeight*Viewport.Scale*Viewport.Zoom;
-           Viewport.DrawingCanvas.Font.Size:=8;
-           CurrentHeight:=Viewport.DrawingCanvas.TextHeight('X');
+           Height:=round(DesiredHeight*Viewport.Scale*Viewport.Zoom);
+           CurrentHeight := Viewport.FontHeight;
+           if CurrentHeight <> Height
+             then Viewport.FontHeight := Height;
+
+           // below code causes loop redraw and 100% CPU.
+           // Changed to above code with direct set of required Font.Height
+          {Viewport.Font.Size:=8;
+           CurrentHeight:=round(Height); ///remove
+           CurrentHeight:=Viewport.TextHeight('X');
            while CurrentHeight>Height do
            begin
-              Viewport.DrawingCanvas.Font.Size:=Viewport.DrawingCanvas.Font.Size-1;
-              CurrentHeight:=Viewport.DrawingCanvas.TextHeight('X');
-              if Viewport.DrawingCanvas.Font.Size<4 then break;
-           end;
+              Viewport.Font.Size:=Viewport.Font.Size-1;
+              CurrentHeight:=Viewport.TextHeight('X');
+              if Viewport.Font.Size<4 then break;
+           end; }
         end;{SetFontHeight}
 
     begin
@@ -15652,8 +16427,12 @@ var I,Size        : integer;
           Viewport.FontName:='Arial';
           Viewport.FontColor:=Preferences.GridFontColor;
           // calculate and set fontheight
-          SetFontHeight(DistPP3D(Min,Max)/FontheightFactor);
-          Height:=Viewport.DrawingCanvas.TextHeight('X');
+          //SetFontHeight(DistPP3D(Min,Max)/FontheightFactor * FFontScale);
+
+          // just set font size
+          Viewport.FontSize:=FFontSize;
+
+          //Height:=Viewport.TextHeight('X');
           Viewport.BrushStyle:=bsClear;
           // draw centerline
           if Viewport.ViewType<>fvProfile then
@@ -15667,17 +16446,17 @@ var I,Size        : integer;
              P2.Y:=P1.Y;
              Pt1:=Viewport.Project(P1);
              Pt2:=Viewport.Project(P2);
-             Viewport.DrawingCanvas.MoveTo(Pt1.X,Pt1.Y);
-             Viewport.DrawingCanvas.LineTo(Pt2.X,Pt2.Y);
-             Width:=Viewport.DrawingCanvas.TextWidth(Str);
+             Viewport.MoveTo(Pt1.X,Pt1.Y);
+             Viewport.LineTo(Pt2.X,Pt2.Y);
+             Width:=Viewport.TextWidth(Str);
              if Viewport.ViewType=fvBodyplan then
              begin
-                Viewport.DrawingCanvas.TextOut(Pt1.X-Width div 2,Pt1.Y,str);
-                Viewport.DrawingCanvas.TextOut(Pt2.X-width div 2,Pt2.Y-Height,Str);
+                Viewport.TextOut(Pt1.X-Width div 2,Pt1.Y,str);
+                Viewport.TextOut(Pt2.X-width div 2,Pt2.Y-Height,Str);
              end else
              begin
-               Viewport.DrawingCanvas.TextOut(Pt1.X-Width,Pt1.Y-Height,str);
-               Viewport.DrawingCanvas.TextOut(Pt2.X,Pt2.Y-Height,Str);
+               Viewport.TextOut(Pt1.X-Width,Pt1.Y-Height,str);
+               Viewport.TextOut(Pt2.X,Pt2.Y-Height,Str);
              end;
              Viewport.PenWidth:=1;
              Viewport.FontColor:=Preferences.GridFontColor;
@@ -15695,11 +16474,11 @@ var I,Size        : integer;
              P2.Z:=P1.Z;
              Pt1:=Viewport.Project(P1);
              Pt2:=Viewport.Project(P2);
-             Viewport.DrawingCanvas.MoveTo(Pt1.X,Pt1.Y);
-             Viewport.DrawingCanvas.LineTo(Pt2.X,Pt2.Y);
-             Width:=Viewport.DrawingCanvas.TextWidth(Str);
-             Viewport.DrawingCanvas.TextOut(Pt1.X,Pt1.Y-Height,Str);
-             Viewport.DrawingCanvas.TextOut(Pt2.X-Width,Pt2.Y-Height,str);
+             Viewport.MoveTo(Pt1.X,Pt1.Y);
+             Viewport.LineTo(Pt2.X,Pt2.Y);
+             Width:=Viewport.TextWidth(Str);
+             Viewport.TextOut(Pt1.X,Pt1.Y-Height,Str);
+             Viewport.TextOut(Pt2.X-Width,Pt2.Y-Height,str);
              // Draw dwl
              if ProjectSettings.FMainparticularsHasBeenset then
              begin
@@ -15711,11 +16490,11 @@ var I,Size        : integer;
                 P2.Z:=P1.Z;
                 Pt1:=Viewport.Project(P1);
                 Pt2:=Viewport.Project(P2);
-                Viewport.DrawingCanvas.MoveTo(Pt1.X,Pt1.Y);
-                Viewport.DrawingCanvas.LineTo(Pt2.X,Pt2.Y);
-                Width:=Viewport.DrawingCanvas.TextWidth(Str);
-                Viewport.DrawingCanvas.TextOut(Pt1.X-width div 2,Pt1.Y-Height,Str);
-                Viewport.DrawingCanvas.TextOut(Pt2.X-Width div 2,Pt2.Y-Height,str);
+                Viewport.MoveTo(Pt1.X,Pt1.Y);
+                Viewport.LineTo(Pt2.X,Pt2.Y);
+                Width:=Viewport.TextWidth(Str);
+                Viewport.TextOut(Pt1.X-width div 2,Pt1.Y-Height,Str);
+                Viewport.TextOut(Pt2.X-Width div 2,Pt2.Y-Height,str);
              end;
              Viewport.PenWidth:=1;
              Viewport.FontColor:=Preferences.GridFontColor;
@@ -15732,10 +16511,10 @@ var I,Size        : integer;
                 P2.X:=P1.X;
                 Pt1:=Viewport.Project(P1);
                 Pt2:=Viewport.Project(P2);
-                Viewport.DrawingCanvas.MoveTo(Pt1.X,Pt1.Y);
-                Viewport.DrawingCanvas.LineTo(Pt2.X,Pt2.Y);
-                Viewport.DrawingCanvas.TextOut(Pt1.X,Pt1.Y,Str);
-                Viewport.DrawingCanvas.TextOut(Pt2.X,Pt2.Y-Height,Str);
+                Viewport.MoveTo(Pt1.X,Pt1.Y);
+                Viewport.LineTo(Pt2.X,Pt2.Y);
+                Viewport.TextOut(Pt1.X,Pt1.Y,Str);
+                Viewport.TextOut(Pt2.X,Pt2.Y-Height,Str);
              end;
           end;
           if DrawDiagonals then
@@ -15752,7 +16531,7 @@ var I,Size        : integer;
                       P1:=Diagonal[I-1].Items[J-1].Value(N/100);
                       Pts[N]:=Viewport.Project(P1);
                    end;
-                   Viewport.DrawingCanvas.Polyline(Pts);
+                   Viewport.Polyline(Pts);
                    if (Visibility.ModelView=mvBoth) or (Viewport.ViewType=fvBodyplan) then
                    begin
                       for N:=0 to 100 do
@@ -15761,7 +16540,7 @@ var I,Size        : integer;
                          P1.Y:=-P1.Y;
                          Pts[N]:=Viewport.Project(P1);
                       end;
-                      Viewport.DrawingCanvas.Polyline(Pts);
+                      Viewport.Polyline(Pts);
                    end;
                 end;
              end;
@@ -15778,37 +16557,37 @@ var I,Size        : integer;
                 P2.Y:=P1.Y;
                 Pt1:=Viewport.Project(P1);
                 Pt2:=Viewport.Project(P2);
-                Viewport.DrawingCanvas.MoveTo(Pt1.X,Pt1.Y);
-                Viewport.DrawingCanvas.LineTo(Pt2.X,Pt2.Y);
+                Viewport.MoveTo(Pt1.X,Pt1.Y);
+                Viewport.LineTo(Pt2.X,Pt2.Y);
                 if Viewport.ViewType=fvBodyplan then Width:=0
-                                                else Width:=Viewport.DrawingCanvas.TextWidth(Str);
+                                                else Width:=Viewport.TextWidth(Str);
                 if Viewport.ViewType=fvBodyplan then
                 begin
-                   Viewport.DrawingCanvas.TextOut(Pt1.X,Pt1.Y,Str);
-                   Viewport.DrawingCanvas.TextOut(Pt2.X-Width,Pt2.Y-Height,str);
+                   Viewport.TextOut(Pt1.X,Pt1.Y,Str);
+                   Viewport.TextOut(Pt2.X-Width,Pt2.Y-Height,str);
                 end else
                 begin
-                  Viewport.DrawingCanvas.TextOut(Pt1.X,Pt1.Y-Height,Str);
-                  Viewport.DrawingCanvas.TextOut(Pt2.X-Width,Pt2.Y-Height,str);
+                  Viewport.TextOut(Pt1.X,Pt1.Y-Height,Str);
+                  Viewport.TextOut(Pt2.X-Width,Pt2.Y-Height,str);
                 end;
                 if (Visibility.ModelView=mvBoth) or (Viewport.ViewType=fvBodyplan) then
                 begin
                   P1.Y:=-Position;
                   P2.Y:=P1.Y;
                   Str:=ConvertDimension(-Position,ProjectSettings.ProjectUnits);
-                  Width:=Viewport.DrawingCanvas.TextWidth(Str);
+                  Width:=Viewport.TextWidth(Str);
                   Pt1:=Viewport.Project(P1);
                   Pt2:=Viewport.Project(P2);
-                  Viewport.DrawingCanvas.MoveTo(Pt1.X,Pt1.Y);
-                  Viewport.DrawingCanvas.LineTo(Pt2.X,Pt2.Y);
+                  Viewport.MoveTo(Pt1.X,Pt1.Y);
+                  Viewport.LineTo(Pt2.X,Pt2.Y);
                   if Viewport.ViewType=fvBodyplan then
                   begin
-                     Viewport.DrawingCanvas.TextOut(Pt1.X-Width,Pt1.Y,Str);
-                     Viewport.DrawingCanvas.TextOut(Pt2.X-Width,Pt2.Y-Height,str);
+                     Viewport.TextOut(Pt1.X-Width,Pt1.Y,Str);
+                     Viewport.TextOut(Pt2.X-Width,Pt2.Y-Height,str);
                   end else
                   begin
-                     Viewport.DrawingCanvas.TextOut(Pt2.X-Width,Pt2.Y,str);
-                     Viewport.DrawingCanvas.TextOut(Pt1.X,Pt1.Y,Str);
+                     Viewport.TextOut(Pt2.X-Width,Pt2.Y,str);
+                     Viewport.TextOut(Pt1.X,Pt1.Y,Str);
                   end;
                 end;
              end;
@@ -15825,11 +16604,11 @@ var I,Size        : integer;
                 P2.Z:=P1.Z;
                 Pt1:=Viewport.Project(P1);
                 Pt2:=Viewport.Project(P2);
-                Viewport.DrawingCanvas.MoveTo(Pt1.X,Pt1.Y);
-                Viewport.DrawingCanvas.LineTo(Pt2.X,Pt2.Y);
-                Width:=Viewport.DrawingCanvas.TextWidth(Str);
-                Viewport.DrawingCanvas.TextOut(Pt1.X,Pt1.Y-Height,Str);
-                Viewport.DrawingCanvas.TextOut(Pt2.X-Width,Pt2.Y-Height,str);
+                Viewport.MoveTo(Pt1.X,Pt1.Y);
+                Viewport.LineTo(Pt2.X,Pt2.Y);
+                Width:=Viewport.TextWidth(Str);
+                Viewport.TextOut(Pt1.X,Pt1.Y-Height,Str);
+                Viewport.TextOut(Pt2.X-Width,Pt2.Y-Height,str);
              end;
           end;
        end;
@@ -15962,13 +16741,13 @@ begin
                Pt:=Viewport.Project(P);
                Size:=round(Sqrt(Viewport.Zoom)*3);
                if Size<1 then Size:=1;
-               Viewport.DrawingCanvas.MoveTo(Pt.X,Pt.Y-Size);
-               Viewport.DrawingCanvas.LineTo(Pt.X,Pt.Y+Size);
-               Viewport.DrawingCanvas.MoveTo(Pt.X-Size,Pt.Y);
-               Viewport.DrawingCanvas.LineTo(Pt.X+Size,Pt.Y);
+               Viewport.MoveTo(Pt.X,Pt.Y-Size);
+               Viewport.LineTo(Pt.X,Pt.Y+Size);
+               Viewport.MoveTo(Pt.X-Size,Pt.Y);
+               Viewport.LineTo(Pt.X+Size,Pt.Y);
                Str:=FloatToStrF(FDesignHydrostatics.FData.SAC[I-1].Y,ffFixed,7,2);
-               if P.X<FProjectsettings.ProjectMainframeLocation then Viewport.DrawingCanvas.TextOut(Pt.X-Viewport.DrawingCanvas.TextWidth(str),Pt.Y-Viewport.DrawingCanvas.TextHeight(str),Str)
-                                                                else Viewport.DrawingCanvas.TextOut(Pt.X,Pt.Y-Viewport.DrawingCanvas.TextHeight(str),Str);
+               if P.X<FProjectsettings.ProjectMainframeLocation then Viewport.TextOut(Pt.X-Viewport.TextWidth(str),Pt.Y-Viewport.TextHeight(str),Str)
+                                                                else Viewport.TextOut(Pt.X,Pt.Y-Viewport.TextHeight(str),Str);
             end;
             Curve.Destroy;
          end;
@@ -15995,7 +16774,7 @@ begin
       Rect.Top:=5;
       Rect.Bottom:=Rect.Top+LegendHeight;
       Rect.Right:=Rect.Left+LegendWidth;
-      Viewport.DrawingCanvas.Rectangle(Rect);
+      Viewport.Rectangle(Rect);
       Viewport.FontName:='Arial';
       Viewport.FontSize:=8;
       Viewport.FontColor:=Preferences.GridFontColor;
@@ -16007,7 +16786,7 @@ begin
          FillColor(I/Nrect,R,G,B);
          Viewport.BrushColor:=RGB(R,G,B);
          Viewport.BrushStyle:=bsSolid;
-         Viewport.DrawingCanvas.Rectangle(Rect);
+         Viewport.Rectangle(Rect);
          Viewport.BrushStyle:=bsClear;
          if odd(I) then
          begin
@@ -16021,7 +16800,7 @@ begin
                Tmp:=2*(0.5-Tmp);
                Str:=FloatToStrF(Surface.MaxGaussCurvature*Tmp,ffFixed,7,NDecimal);
             end else Str:='0.0';
-            Viewport.DrawingCanvas.TextOut(Rect.Right+5,(Rect.Top+Rect.Bottom-Viewport.DrawingCanvas.TextHeight(str)) div 2,Str);
+            Viewport.TextOut(Rect.Right+5,(Rect.Top+Rect.Bottom-Viewport.TextHeight(str)) div 2,Str);
          end;
          Rect.Top:=Rect.Top+RectHeight;
       end;
@@ -16335,6 +17114,7 @@ begin
    try
       Logger.Debug('LoadBinary');
       Source.Reset;
+      Source.Encoding := Preferences.FbmEncoding;
       Source.Load(Str);
       if Str='FREE!ship' then
       begin
@@ -16472,6 +17252,7 @@ begin
       end //if Str='FREE!ship' then
       else MessageDlg(Userstring(189),mtError,[mbOk],0);
       FileChanged:=False;
+      ModelLoaded:=true;
    finally
       Surface.DesiredSubdivisionLevel:=Ord(Precision)+1;
       Surface.Rebuild;
@@ -16499,6 +17280,7 @@ begin
    try
       Source.LoadFromFile(FileName);                // Load everything into memory
       Source.Reset;
+      Source.Encoding := Preferences.FbmEncoding;
       Source.Load(Str);
       if Str='FREE!ship' then
       begin
@@ -16555,6 +17337,7 @@ begin
    Screen.Cursor:=crHourGlass;
    try
       Logger.Debug('SaveBinary');
+      Destination.Encoding := Preferences.FbmEncoding;
       Destination.Add('FREE!ship');
       Destination.Add(FileVersion);
       Destination.Add(Ord(Precision));
@@ -16713,6 +17496,7 @@ begin
 
       PartFile:=TFreeFileBuffer.Create;
       PartFile.Version:=CurrentVersion;
+      PartFile.Encoding:=Preferences.FbmEncoding;
 
       PrevCursor:=Screen.Cursor;
       Screen.Cursor:=crHourGlass;

@@ -629,6 +629,11 @@ var I,Index       : Integer;
     Spline        : TFreeSpline;
 begin
    FFreeship:=Freeship;
+
+   Freeship.Preferences.LoadImageIntoBitmap(Button1.Glyph, 'Calculate');
+   Freeship.Preferences.LoadImageIntoBitmap(SpeedButton1.Glyph, 'Ok');
+   Freeship.Preferences.LoadImageIntoBitmap(BitBtn2.Glyph, 'Cancel');
+
    FOriginalStations:=TFasterList.Create;
    FNewStations:=TFasterList.Create;
    FOriginalWaterline:=TFasterList.Create;
@@ -934,9 +939,9 @@ begin
       Viewport.PenColor:=clBlack;
       Viewport.PenStyle:=psSolid;
       Pt:=Viewport.Project(SetPoint(Viewport.Min3D.X,0.0,Viewport.Min3D.Z));
-      Viewport.Drawingcanvas.MoveTo(Pt.X,Pt.Y);
+      Viewport.MoveTo(Pt.X,Pt.Y);
       Pt:=Viewport.Project(SetPoint(Viewport.Min3D.X,0.0,Viewport.Max3D.Z));
-      Viewport.Drawingcanvas.LineTo(Pt.X,Pt.Y);
+      Viewport.LineTo(Pt.X,Pt.Y);
    end;
 end;{TFreeLackenbyDialog.ViewportRedraw}
 
@@ -1030,9 +1035,9 @@ begin
       end;
       Topview.PenStyle:=psDot;
       Pt:=Topview.Project(SetPoint(FFreeship.ProjectSettings.ProjectMainframeLocation,Topview.Min3D.Y,0));
-      Topview.DrawingCanvas.MoveTo(Pt.X,Pt.Y);
+      Topview.MoveTo(Pt.X,Pt.Y);
       Pt:=Topview.Project(SetPoint(FFreeship.ProjectSettings.ProjectMainframeLocation,Topview.Max3D.Y,0));
-      Topview.DrawingCanvas.LineTo(Pt.X,Pt.Y);
+      Topview.LineTo(Pt.X,Pt.Y);
 
 
 
@@ -1056,7 +1061,7 @@ begin
       if FOriginalSectionalAreaCurve.NumberOfPoints>0 then
       begin
          Pt:=TopView.Project(FOriginalSectionalAreaCurve.Value(0.5));
-         TopView.DrawingCanvas.TextOut(Pt.X,Pt.Y,'SAC');
+         TopView.TextOut(Pt.X,Pt.Y,'SAC');
       end;
       for I:=1 to FOriginalWaterline.Count do
       begin
@@ -1068,16 +1073,16 @@ begin
          if Spline.NumberOfPoints>0 then
          begin
             Pt:=TopView.Project(Spline.Value(0.5));
-            TopView.DrawingCanvas.TextOut(Pt.X,Pt.Y,'DWL');
+            TopView.TextOut(Pt.X,Pt.Y,'DWL');
          end;
       end;
       TopView.PenColor:=clBlack;
       TopView.PenStyle:=psSolid;
       Pt:=TopView.Project(SetPoint(TopView.Min3D.X,0.0,0.0));
-      TopView.Drawingcanvas.MoveTo(Pt.X,Pt.Y);
+      TopView.MoveTo(Pt.X,Pt.Y);
       Pt:=TopView.Project(SetPoint(TopView.Max3D.X,0.0,0.0));
-      TopView.Drawingcanvas.LineTo(Pt.X,Pt.Y);
+      TopView.LineTo(Pt.X,Pt.Y);
    end;
 end;{TFreeLackenbyDialog.TopViewRedraw}
 
-end.
+end.

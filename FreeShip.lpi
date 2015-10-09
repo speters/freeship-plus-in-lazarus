@@ -23,8 +23,8 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="3"/>
       <MinorVersionNr Value="5"/>
-      <RevisionNr Value="2"/>
-      <BuildNr Value="57"/>
+      <RevisionNr Value="3"/>
+      <BuildNr Value="29"/>
       <StringTable LegalCopyright="GPLv2" OriginalFilename="FreeShip" ProductName="FREE!ship" ProductVersion="3.5"/>
     </VersionInfo>
     <MacroValues Count="1">
@@ -42,22 +42,25 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="--nosplash --debug --log-debug"/>
+        <CommandLineParams Value="--debug --log-debug"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="4">
+    <RequiredPackages Count="5">
       <Item1>
-        <PackageName Value="FreePackage"/>
+        <PackageName Value="lazopenglcontext"/>
       </Item1>
       <Item2>
-        <PackageName Value="TAChartLazarusPkg"/>
+        <PackageName Value="FreePackage"/>
       </Item2>
       <Item3>
-        <PackageName Value="Printer4Lazarus"/>
+        <PackageName Value="TAChartLazarusPkg"/>
       </Item3>
       <Item4>
-        <PackageName Value="LCL"/>
+        <PackageName Value="Printer4Lazarus"/>
       </Item4>
+      <Item5>
+        <PackageName Value="LCL"/>
+      </Item5>
     </RequiredPackages>
     <Units Count="70">
       <Unit0>
@@ -74,7 +77,6 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="Main"/>
       </Unit2>
       <Unit3>
         <Filename Value="Forms/FreeHullformWindow.pas"/>
@@ -107,7 +109,6 @@
       <Unit7>
         <Filename Value="Units/FreeVersionUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="FreeVersionUnit"/>
       </Unit7>
       <Unit8>
         <Filename Value="Forms/FreeIntersectionDlg.pas"/>
@@ -341,7 +342,9 @@
       <Unit42>
         <Filename Value="Forms/FreeBackgroundBlendingDlg.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="FreeBackgroundBlendDialog"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit42>
       <Unit43>
         <Filename Value="Forms/FreeCylinderDlg.pas"/>
@@ -396,7 +399,6 @@
       <Unit51>
         <Filename Value="Units/FreeShipUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="FreeShipUnit"/>
       </Unit51>
       <Unit52>
         <Filename Value="Forms/FreeResistance_PlaningDlg.pas"/>
@@ -455,38 +457,40 @@
         <ComponentName Value="FreeAboutDlg"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="FreeAboutDlg"/>
       </Unit61>
       <Unit62>
-        <Filename Value="Units/FreeViewPort.pas"/>
+        <Filename Value="Units/colorfactory.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit62>
       <Unit63>
-        <Filename Value="Units/colorfactory.pas"/>
+        <Filename Value="Units/FreeBitmap.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit63>
       <Unit64>
-        <Filename Value="Units/FreeBitmap.pas"/>
+        <Filename Value="Units/FreeBGRbuffer.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit64>
       <Unit65>
-        <Filename Value="Units/FreeBGRbuffer.pas"/>
+        <Filename Value="Units/FreeBitmapFormatHelper.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit65>
       <Unit66>
-        <Filename Value="Units/FreeRGBbuffer.pas"/>
+        <Filename Value="Units/ColorIniFile.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit66>
       <Unit67>
-        <Filename Value="Units/FreeBitmapFormatHelper.pas"/>
+        <Filename Value="Units/freestringutils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit67>
       <Unit68>
-        <Filename Value="Units/ColorIniFile.pas"/>
+        <Filename Value="Forms/EnterThemeNameDlg.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="EnterThemeNameDlg"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit68>
       <Unit69>
-        <Filename Value="Units/freestringutils.pas"/>
+        <Filename Value="Units/FreeViewPortOpenGL.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit69>
     </Units>
@@ -496,6 +500,7 @@
     <SearchPaths>
       <IncludeFiles Value="Units;Forms;$(ProjOutDir)"/>
       <OtherUnitFiles Value="Units;Forms"/>
+      <SrcPath Value="/usr/share/lazarus/1.4.0/lcl/"/>
     </SearchPaths>
     <Parsing>
       <SyntaxOptions>
@@ -510,7 +515,6 @@
         <OverflowChecks Value="True"/>
         <StackChecks Value="True"/>
       </Checks>
-      <VerifyObjMethodCallValidity Value="True"/>
       <Optimizations>
         <OptimizationLevel Value="0"/>
       </Optimizations>
@@ -518,6 +522,7 @@
     <Linking>
       <Debugging>
         <DebugInfoType Value="dsDwarf2"/>
+        <UseValgrind Value="True"/>
       </Debugging>
       <Options>
         <Win32>

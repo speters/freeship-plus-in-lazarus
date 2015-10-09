@@ -47,6 +47,7 @@ uses
      Variants,
      Classes,
      Graphics,
+     IntfGraphics, GraphType, FPImage,
      Controls,
      Forms,
      Math,
@@ -67,7 +68,7 @@ uses
      FreeAboutDlg,
      Menus,
      ToolWin,
-     Buttons, StdActns, FileUtil;
+     Buttons, StdActns, Spin, FileUtil;
 
 type
 
@@ -78,308 +79,320 @@ type
      HelpAction: THelpAction;
      HelpContents: TMenuItem;
      HelpAbout: TMenuItem;
+     Label1: TLabel;
+     PanelActiveLayerColor: TPanel;
+     PanelEdges: TPanel;
+     PanelCurves: TPanel;
+     PanelFaces: TPanel;
+     PanelFile: TPanel;
+     PanelEdit: TPanel;
+     PanelPoints: TPanel;
+     PanelMain: TPanel;
+     PanelVisibility: TPanel;
+     PanelLayers: TPanel;
      SelectLeakPoints: TAction;
-                              FreeShip                   : TFreeShip;
-                              ActionList1                : TActionList;
-                              LoadFile                   : TAction;
-                              SelectLeakPoints1: TMenuItem;
-                              MH: TMenuItem;
-                              OST: TMenuItem;
-                              PropellerRvrs: TMenuItem;
-                              RBHS: TMenuItem;
-                              StatusBar                  : TPanel;
-                              MenuImages                 : TImageList;
-                              ExitProgram                : TAction;
-                              ShowControlNet             : TAction;
-                              ShowInteriorEdges          : TAction;
-                              MainMenu1                  : TMainMenu;
-                              File1                      : TMenuItem;
-                              Mediumtelelens130mm1       : TMenuItem;
-                              ExitProgram1               : TMenuItem;
-                              Visibility1                : TMenuItem;
-                              ShowControlNet1            : TMenuItem;
-                              ShowInteriorEdges1         : TMenuItem;
-                              Window1                    : TMenuItem;
-                              Cascade1                   : TMenuItem;
-                              Tile1                       : TMenuItem;
-                              NewWindow1                 : TMenuItem;
-                              NewWindow                  : TAction;
-                              TileWindow                 : TAction;
-                              CascadeWindow              : TAction;
-                              N1                         : TMenuItem;
-                              BothSides                  : TAction;
-                              Showbothsides1             : TMenuItem;
-                              FileSaveas                 : TAction;
-                              Save1                      : TMenuItem;
-                              LayerAutoGroup             : TAction;
-                              Layer1                     : TMenuItem;
-                              Autogroup1                 : TMenuItem;
-                              NewLayer                   : TAction;
-                              New1                       : TMenuItem;
-                              Delete: TAction;
-                              ToolBar: TToolBar;
-                              ToolButton1: TToolButton;
-                              ToolButton3: TToolButton;
-                              ToolButton4: TToolButton;
-                              ToolButton5: TToolButton;
-                              ToolButton6: TToolButton;
-                              LayerBox: TComboBox;
-                              ToolButton7: TToolButton;
-                              ToolButton8: TToolButton;
-                              ToolButton9: TToolButton;
-                              ToolButton10: TToolButton;
-                              PrecisionBox: TComboBox;
-                              Edit1: TMenuItem;
-                              ToolButton12: TToolButton;
-                              Point1: TMenuItem;
-                              Edge1: TMenuItem;
-                              Face1: TMenuItem;
-                              EdgeCollapse: TAction;
-                              ToolButton11: TToolButton;
-                              ToolButton13: TToolButton;
-                              Collapse1: TMenuItem;
-                              ToolButton14: TToolButton;
-                              ToolButton15: TToolButton;
-                              Delete1: TMenuItem;
-                              NewEdge: TAction;
-                              ToolButton16: TToolButton;
-                              New2: TMenuItem;
-                              ImportFEF: TAction;
-                              ImportOff1: TMenuItem;
-                              EdgeCrease: TAction;
-                              ToolButton17: TToolButton;
-                              Crease1: TMenuItem;
-                              DeselectAll: TAction;
-                              Selection1: TMenuItem;
-                              Clearselection1: TMenuItem;
-                              PointCollapse: TAction;
-                              ToolButton18: TToolButton;
-                              ToolButton19: TToolButton;
-                              PointCollapse1: TMenuItem;
-                              Panel1: TPanel;
-                              ColorDialog: TColorDialog;
-                              ActiveLayerColor: TAction;
-                              Activelayercolor1: TMenuItem;
-                              DeleteEmptyLayers: TAction;
-                              Deleteempty1: TMenuItem;
-                              LayerDialog: TAction;
-                              Deleteempty2: TMenuItem;
-                              NewModel: TAction;
-                              ToolButton20: TToolButton;
-                              New3: TMenuItem;
-                              ShowStations: TAction;
-                              ToolButton21: TToolButton;
-                              Stations1: TMenuItem;
-                              ShowButtocks: TAction;
-                              ToolButton22: TToolButton;
-                              ShowWaterlines: TAction;
-                              ToolButton23: TToolButton;
-                              Buttocks1: TMenuItem;
-                              Waterlines1: TMenuItem;
-                              NewFace: TAction;
-                              ToolButton24: TToolButton;
-                              ToolButton25: TToolButton;
-                              New4: TMenuItem;
-                              IntersectionDialog: TAction;
-                              ToolButton26: TToolButton;
-                              EdgeExtrude: TAction;
-                              ToolButton27: TToolButton;
-                              Extrude1: TMenuItem;
-                              ToolButton28: TToolButton;
-                              Help1: TMenuItem;
-                              EdgeSplit: TAction;
-                              ToolButton29: TToolButton;
-                              Split1: TMenuItem;
-                              ExportFEF: TAction;
-                              ExportFEFfile1: TMenuItem;
-                              EditProjectSettings: TAction;
-                              Project1: TMenuItem;
-                              Projectsettings1: TMenuItem;
-                              CheckModel: TAction;
-                              ools1: TMenuItem;
-                              Analyzesurface1: TMenuItem;
-                              ToolButton30: TToolButton;
-                              ShowNormals: TAction;
-                              DesignHydrostatics: TAction;
-                              Calculations1: TMenuItem;
-                              Hydrostatics1: TMenuItem;
-                              Normals1: TMenuItem;
-                              ImportVRML: TAction;
-                              Export1: TMenuItem;
-                              VRML1: TMenuItem;
-                              Import1: TMenuItem;
-                              RemoveNegative: TAction;
-                              Removenegative1: TMenuItem;
-                              RotateModel: TAction;
-                              Rotatemodel1: TMenuItem;
-                              RotateModelM: TAction;
-                              Rotatemodel2: TMenuItem;
-                              ScaleModel: TAction;
-                              Scale3D1: TMenuItem;
-                              ShowGrid: TAction;
-                              ToolButton31: TToolButton;
-                              Analyzesurface2: TMenuItem;
-                              Undo: TAction;
-                              Undo1: TMenuItem;
-                              Panel2: TPanel;
-                              HydrostaticsDialog: TAction;
-                              Hydrostatics2: TMenuItem;
-                              ExportObj: TAction;
-                              WavefrontfileObj1: TMenuItem;
-                              InvertFace: TAction;
-                              Invert1: TMenuItem;
-                              ToolButton32: TToolButton;
-                              ToolButton33: TToolButton;
-                              Preferences: TAction;
-                              Preferences1: TMenuItem;
-                              N2: TMenuItem;
-                              ImportBodyplan: TAction;
-                              ExportDXF3DPolylines: TAction;
-                              ExportDXFPolylines1: TMenuItem;
-                              ExportDXFFaces: TAction;
-                              DXF3Dfaces1: TMenuItem;
-                              ImportHullFile: TAction;
-                              Carlssonhulfile1: TMenuItem;
-                              ExportOffsets: TAction;
-                              Offsets1: TMenuItem;
-                              MoveModel: TAction;
-                              Deselectall2: TMenuItem;
-                              AddPoint: TAction;
-                              Add1: TMenuItem;
-                              Intersections1: TMenuItem;
-                              DevelopLayers: TAction;
-                              Developplates1: TMenuItem;
-                              ExportArchimedes: TAction;
-                              N3: TMenuItem;
-                              ArchimedesMB1: TMenuItem;
-                              ToolButton34: TToolButton;
-                              ShowLinesplan: TAction;
-                              Linesplan1: TMenuItem;
-                              ShowDiagonals: TAction;
-                              ToolButton35: TToolButton;
-                              Diagonals1: TMenuItem;
-                              Recentfiles: TMenuItem;
-                              N4: TMenuItem;
-                              ImportCarene: TAction;
-                              Carenefile1: TMenuItem;
-                              ShowMarkers: TAction;
-                              ToolButton36: TToolButton;
-                              Markers1: TMenuItem;
-                              DeleteMarkers: TAction;
-                              Deletemarkers1: TMenuItem;
-                              ImportSurface: TAction;
-                              Surface1: TMenuItem;
-                              Showcurvature: TAction;
-                              ToolButton37: TToolButton;
-                              IncreaseCurvatureScale: TAction;
-                              DecreaseCurvatureScale: TAction;
-                              N5: TMenuItem;
-                              Decrcurvaturescale1: TMenuItem;
-                              Incrcurvaturescale1: TMenuItem;
-                              FileSave: TAction;
-                              ToolButton38: TToolButton;
-                              Save2: TMenuItem;
-                              Curvature1: TMenuItem;
-                              ImportChines: TAction;
-                              Chines1: TMenuItem;
-                              Curve1: TMenuItem;
-                              ShowControlCurves: TAction;
-                              Controlcurves1: TMenuItem;
-                              ToolButton2: TToolButton;
-                              NewCurve: TAction;
-                              AddCurve1: TMenuItem;
-                              ToolButton39: TToolButton;
-                              ToolButton40: TToolButton;
-                              ExportCoordinates: TAction;
-                              Coordinates1: TMenuItem;
-                              InsertPlane: TAction;
-                              InsertPlane1: TMenuItem;
-                              ToolButton41: TToolButton;
-                              PointsLock: TAction;
-                              PointsLock1: TMenuItem;
-                              PointsUnlock: TAction;
-                              Unlockpoints1: TMenuItem;
-                              ToolButton42: TToolButton;
-                              ToolButton43: TToolButton;
-                              PointsUnlockAll: TAction;
-                              Unlockallpoints1: TMenuItem;
-                              ToolButton44: TToolButton;
-                              Markers2: TMenuItem;
-                              ImportMarkers: TAction;
-                              Import2: TMenuItem;
-                              ExportMichlet: TAction;
-                              MichletCFD1: TMenuItem;
-                              ExportAddMass: TAction;
-                              AddMassCFD1: TMenuItem;							  
-                              ResistanceKaper: TAction;
-                              ResistancePlaning: TAction;
-                              Resistance1: TMenuItem;
-                              Kaper1: TMenuItem;
-                              ResistanceDelft: TAction;
-                              Delftyachtseries1: TMenuItem;
-                              ResistanceHoltr: TAction;
-                              ResistanceOST: TAction;
-							  ResistanceRBHS: TAction;
-							  ResistanceMH: TAction;							  
-                              ResistanceHollen: TAction;
-                              ResistanceOortmer: TAction;
-                              ResistanceFungLeib: TAction;
-                              Holtr1: TMenuItem;
-                              Hollen: TMenuItem;
-                              Oortmer: TMenuItem;
-                              FungLeib: TMenuItem;
-                              Planing1: TMenuItem;
-                              PropellerTask1: TMenuItem;
-                              PropTask4_: TAction;
-                              PropTask5_: TAction;
-                              PropTask1_: TAction;
-                              PropTask2_: TAction;
-                              PropTask3_: TAction;
-                              PropTask4: TMenuItem;
-                              PropTask5: TMenuItem;
-                              PropTask1: TMenuItem;
-                              PropTask2: TMenuItem;
-                              PropTask3: TMenuItem;
-                              PropTaskRvrs_: TAction;							  
-                              PropTaskRvrs: TMenuItem;	
-                              HydrodynManeuv_: TAction;							  
-                              HydrodynManeuv: TMenuItem;							  							  
-                              HydrodynTask: TMenuItem;
-                              HydrodynTask1_: TAction;
-                              HydrodynTask2_: TAction;
-                              HydrodynTask3_: TAction;
-                              HydrodynTask4_: TAction;	
-                              HydrodynTask1: TMenuItem;
-                              HydrodynTask2: TMenuItem;
-                              HydrodynTask3: TMenuItem;							  
-                              HydrodynTask4: TMenuItem;							  
-                              Panel3: TPanel;
-                              PointAlign: TAction;
-                              ToolButton45: TToolButton;
-                              Projectline1: TMenuItem;
-                              ImportMichletWaves: TAction;
-                              N6: TMenuItem;
-                              ImportMichletWaves1: TMenuItem;
-                              ShowHydrostatics: TAction;
-                              ToolButton46: TToolButton;
-                              Hydrostaticdata1: TMenuItem;
-                              MirrorFace: TAction;
-                              ransform1: TMenuItem;
-                              MirrorFace1: TMenuItem;
-                              ExportDXF2DPolylines: TAction;
-                              DXF2DPolylines1: TMenuItem;
-                              Panel4: TPanel;
-                              TransformLackenby: TAction;
-                              Lackenby1: TMenuItem;
-                              ExportIGES: TAction;
-                              IGES1: TMenuItem;
-                              ExportPart: TAction;
-                              Part1: TMenuItem;
-                              ImportPart: TAction;
-                              Part2: TMenuItem;
-                              LayerIntersection: TAction;
-                              ToolButton47: TToolButton;
-                              Saveas1: TMenuItem;
+    FreeShip                   : TFreeShip;
+    ActionList1                : TActionList;
+    LoadFile                   : TAction;
+    SelectLeakPoints1: TMenuItem;
+    MH: TMenuItem;
+    OST: TMenuItem;
+    PropellerRvrs: TMenuItem;
+    RBHS: TMenuItem;
+    SpinEditFontSize: TSpinEdit;
+    StatusBar                  : TPanel;
+    MenuImages                 : TImageList;
+    ExitProgram                : TAction;
+    ShowControlNet             : TAction;
+    ShowInteriorEdges          : TAction;
+    MainMenu1                  : TMainMenu;
+    File1                      : TMenuItem;
+    Open       : TMenuItem;
+    ExitProgram1               : TMenuItem;
+    ToolBarMain: TToolBar;
+    ToolBarCurves: TToolBar;
+    ToolBarFaces: TToolBar;
+    ToolBarFile: TToolBar;
+    ToolBarEdit: TToolBar;
+    ToolBarEdges: TToolBar;
+    ToolBarPoints: TToolBar;
+    ToolBarVisibility: TToolBar;
+    ToolBarLayers: TToolBar;
+    ToolButtonSelect: TToolButton;
+    ToolButtonRedo: TToolButton;
+    ToolButtonUndo: TToolButton;
+    Visibility1                : TMenuItem;
+    ShowControlNet1            : TMenuItem;
+    ShowInteriorEdges1         : TMenuItem;
+    Window1                    : TMenuItem;
+    Cascade1                   : TMenuItem;
+    Tile1                       : TMenuItem;
+    NewWindow1                 : TMenuItem;
+    NewWindow                  : TAction;
+    TileWindow                 : TAction;
+    CascadeWindow              : TAction;
+    N1                         : TMenuItem;
+    BothSides                  : TAction;
+    Showbothsides1             : TMenuItem;
+    FileSaveas                 : TAction;
+    Save1                      : TMenuItem;
+    LayerAutoGroup             : TAction;
+    Layer1                     : TMenuItem;
+    Autogroup1                 : TMenuItem;
+    NewLayer                   : TAction;
+    New1                       : TMenuItem;
+    Delete: TAction;
+    ToolButton1: TToolButton;
+    ToolButton3: TToolButton;
+    ToolButton5: TToolButton;
+    ToolButton6: TToolButton;
+    LayerBox: TComboBox;
+    ToolButton8: TToolButton;
+    ToolButton9: TToolButton;
+    ToolButton10: TToolButton;
+    Edit1: TMenuItem;
+    Point1: TMenuItem;
+    Edge1: TMenuItem;
+    Face1: TMenuItem;
+    EdgeCollapse: TAction;
+    ToolButton13: TToolButton;
+    Collapse1: TMenuItem;
+    ToolButtonDelete: TToolButton;
+    Delete1: TMenuItem;
+    NewEdge: TAction;
+    ToolButton16: TToolButton;
+    New2: TMenuItem;
+    ImportFEF: TAction;
+    ImportOff1: TMenuItem;
+    EdgeCrease: TAction;
+    ToolButton17: TToolButton;
+    Crease1: TMenuItem;
+    DeselectAll: TAction;
+    Selection1: TMenuItem;
+    Clearselection1: TMenuItem;
+    PointCollapse: TAction;
+    ToolButton18: TToolButton;
+    PointCollapse1: TMenuItem;
+    ColorDialog: TColorDialog;
+    ActiveLayerColor: TAction;
+    Activelayercolor1: TMenuItem;
+    DeleteEmptyLayers: TAction;
+    Deleteempty1: TMenuItem;
+    LayerDialog: TAction;
+    Deleteempty2: TMenuItem;
+    NewModel: TAction;
+    ToolButton20: TToolButton;
+    New3: TMenuItem;
+    ShowStations: TAction;
+    ToolButton21: TToolButton;
+    Stations1: TMenuItem;
+    ShowButtocks: TAction;
+    ToolButton22: TToolButton;
+    ShowWaterlines: TAction;
+    ToolButton23: TToolButton;
+    Buttocks1: TMenuItem;
+    Waterlines1: TMenuItem;
+    NewFace: TAction;
+    ToolButton24: TToolButton;
+    New4: TMenuItem;
+    IntersectionDialog: TAction;
+    ToolButton26: TToolButton;
+    EdgeExtrude: TAction;
+    ToolButton27: TToolButton;
+    Extrude1: TMenuItem;
+    Help1: TMenuItem;
+    EdgeSplit: TAction;
+    ToolButton29: TToolButton;
+    Split1: TMenuItem;
+    ExportFEF: TAction;
+    ExportFEFfile1: TMenuItem;
+    EditProjectSettings: TAction;
+    Project1: TMenuItem;
+    Projectsettings1: TMenuItem;
+    CheckModel: TAction;
+    ools1: TMenuItem;
+    Analyzesurface1: TMenuItem;
+    ToolButton30: TToolButton;
+    ShowNormals: TAction;
+    DesignHydrostatics: TAction;
+    Calculations1: TMenuItem;
+    Hydrostatics1: TMenuItem;
+    Normals1: TMenuItem;
+    ImportVRML: TAction;
+    Export1: TMenuItem;
+    VRML1: TMenuItem;
+    Import1: TMenuItem;
+    RemoveNegative: TAction;
+    Removenegative1: TMenuItem;
+    RotateModel: TAction;
+    Rotatemodel1: TMenuItem;
+    RotateModelM: TAction;
+    Rotatemodel2: TMenuItem;
+    ScaleModel: TAction;
+    Scale3D1: TMenuItem;
+    ShowGrid: TAction;
+    ToolButton31: TToolButton;
+    Analyzesurface2: TMenuItem;
+    Undo: TAction;
+    Undo1: TMenuItem;
+    Panel2: TPanel;
+    HydrostaticsDialog: TAction;
+    Hydrostatics2: TMenuItem;
+    ExportObj: TAction;
+    WavefrontfileObj1: TMenuItem;
+    InvertFace: TAction;
+    Invert1: TMenuItem;
+    ToolButton32: TToolButton;
+    ToolButton33: TToolButton;
+    Preferences: TAction;
+    Preferences1: TMenuItem;
+    N2: TMenuItem;
+    ImportBodyplan: TAction;
+    ExportDXF3DPolylines: TAction;
+    ExportDXFPolylines1: TMenuItem;
+    ExportDXFFaces: TAction;
+    DXF3Dfaces1: TMenuItem;
+    ImportHullFile: TAction;
+    Carlssonhulfile1: TMenuItem;
+    ExportOffsets: TAction;
+    Offsets1: TMenuItem;
+    MoveModel: TAction;
+    Deselectall2: TMenuItem;
+    AddPoint: TAction;
+    Add1: TMenuItem;
+    Intersections1: TMenuItem;
+    DevelopLayers: TAction;
+    Developplates1: TMenuItem;
+    ExportArchimedes: TAction;
+    N3: TMenuItem;
+    ArchimedesMB1: TMenuItem;
+    ToolButton34: TToolButton;
+    ShowLinesplan: TAction;
+    Linesplan1: TMenuItem;
+    ShowDiagonals: TAction;
+    ToolButton35: TToolButton;
+    Diagonals1: TMenuItem;
+    Recentfiles: TMenuItem;
+    N4: TMenuItem;
+    ImportCarene: TAction;
+    Carenefile1: TMenuItem;
+    ShowMarkers: TAction;
+    ToolButton36: TToolButton;
+    Markers1: TMenuItem;
+    DeleteMarkers: TAction;
+    Deletemarkers1: TMenuItem;
+    ImportSurface: TAction;
+    Surface1: TMenuItem;
+    Showcurvature: TAction;
+    ToolButton37: TToolButton;
+    IncreaseCurvatureScale: TAction;
+    DecreaseCurvatureScale: TAction;
+    N5: TMenuItem;
+    Decrcurvaturescale1: TMenuItem;
+    Incrcurvaturescale1: TMenuItem;
+    FileSave: TAction;
+    ToolButton38: TToolButton;
+    Save2: TMenuItem;
+    Curvature1: TMenuItem;
+    ImportChines: TAction;
+    Chines1: TMenuItem;
+    Curve1: TMenuItem;
+    ShowControlCurves: TAction;
+    Controlcurves1: TMenuItem;
+    ToolButton2: TToolButton;
+    NewCurve: TAction;
+    AddCurve1: TMenuItem;
+    ToolButton40: TToolButton;
+    ExportCoordinates: TAction;
+    Coordinates1: TMenuItem;
+    InsertPlane: TAction;
+    InsertPlane1: TMenuItem;
+    ToolButton41: TToolButton;
+    PointsLock: TAction;
+    PointsLock1: TMenuItem;
+    PointsUnlock: TAction;
+    Unlockpoints1: TMenuItem;
+    ToolButton42: TToolButton;
+    ToolButton43: TToolButton;
+    PointsUnlockAll: TAction;
+    Unlockallpoints1: TMenuItem;
+    ToolButton44: TToolButton;
+    Markers2: TMenuItem;
+    ImportMarkers: TAction;
+    Import2: TMenuItem;
+    ExportMichlet: TAction;
+    MichletCFD1: TMenuItem;
+    ExportAddMass: TAction;
+    AddMassCFD1: TMenuItem;
+    ResistanceKaper: TAction;
+    ResistancePlaning: TAction;
+    Resistance1: TMenuItem;
+    Kaper1: TMenuItem;
+    ResistanceDelft: TAction;
+    Delftyachtseries1: TMenuItem;
+    ResistanceHoltr: TAction;
+    ResistanceOST: TAction;
+    ResistanceRBHS: TAction;
+    ResistanceMH: TAction;
+    ResistanceHollen: TAction;
+    ResistanceOortmer: TAction;
+    ResistanceFungLeib: TAction;
+    Holtr1: TMenuItem;
+    Hollen: TMenuItem;
+    Oortmer: TMenuItem;
+    FungLeib: TMenuItem;
+    Planing1: TMenuItem;
+    PropellerTask1: TMenuItem;
+    PropTask4_: TAction;
+    PropTask5_: TAction;
+    PropTask1_: TAction;
+    PropTask2_: TAction;
+    PropTask3_: TAction;
+    PropTask4: TMenuItem;
+    PropTask5: TMenuItem;
+    PropTask1: TMenuItem;
+    PropTask2: TMenuItem;
+    PropTask3: TMenuItem;
+    PropTaskRvrs_: TAction;
+    PropTaskRvrs: TMenuItem;
+    HydrodynManeuv_: TAction;
+    HydrodynManeuv: TMenuItem;
+    HydrodynTask: TMenuItem;
+    HydrodynTask1_: TAction;
+    HydrodynTask2_: TAction;
+    HydrodynTask3_: TAction;
+    HydrodynTask4_: TAction;
+    HydrodynTask1: TMenuItem;
+    HydrodynTask2: TMenuItem;
+    HydrodynTask3: TMenuItem;
+    HydrodynTask4: TMenuItem;
+    Panel3: TPanel;
+    PointAlign: TAction;
+    ToolButton45: TToolButton;
+    Projectline1: TMenuItem;
+    ImportMichletWaves: TAction;
+    N6: TMenuItem;
+    ImportMichletWaves1: TMenuItem;
+    ShowHydrostatics: TAction;
+    ToolButton46: TToolButton;
+    Hydrostaticdata1: TMenuItem;
+    MirrorFace: TAction;
+    ransform1: TMenuItem;
+    MirrorFace1: TMenuItem;
+    ExportDXF2DPolylines: TAction;
+    DXF2DPolylines1: TMenuItem;
+    Panel4: TPanel;
+    TransformLackenby: TAction;
+    Lackenby1: TMenuItem;
+    ExportIGES: TAction;
+    IGES1: TMenuItem;
+    ExportPart: TAction;
+    Part1: TMenuItem;
+    ImportPart: TAction;
+    Part2: TMenuItem;
+    LayerIntersection: TAction;
+    ToolButton47: TToolButton;
+    Saveas1: TMenuItem;
     KeelRudderWizard: TAction;
     Deleteempty3: TMenuItem;
     Redo: TAction;
@@ -414,131 +427,134 @@ type
     Select_LeakPoints: TMenuItem;
 
     FMDIChildList : TList;
-
     procedure FormActivate(Sender: TObject);
     procedure FormChangeBounds(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure FormWindowStateChange(Sender: TObject);
 
-                              procedure LoadFileExecute(Sender   : TObject);
-                              procedure ExitProgramExecute(Sender: TObject);
-                              procedure FormShow(Sender: TObject);
-                              procedure ShowControlNetExecute(Sender: TObject);
-                              procedure ShowInteriorEdgesExecute(Sender: TObject);
-                              procedure NewWindowExecute(Sender: TObject);
-                              procedure TileWindowExecute(Sender: TObject);
-                              procedure CascadeWindowExecute(Sender: TObject);
-                              procedure BothSidesExecute(Sender: TObject);
-                              procedure FreeShipFileChanged(Sender: TObject);
-                              procedure PrecisionBoxChange(Sender: TObject);
-                              procedure FileSaveasExecute(Sender: TObject);
-                              procedure LayerAutoGroupExecute(Sender: TObject);
-                              procedure FormClose(Sender: TObject; var Action: TCloseAction);
-                              procedure NewLayerExecute(Sender: TObject);
-                              procedure DeleteExecute(Sender: TObject);
-                              procedure EdgeCollapseExecute(Sender: TObject);
-                              procedure NewEdgeExecute(Sender: TObject);
-                              procedure ImportFEFExecute(Sender: TObject);
-                              procedure EdgeCreaseExecute(Sender: TObject);
-                              procedure DeselectAllExecute(Sender: TObject);
-                              procedure PointCollapseExecute(Sender: TObject);
-                              procedure LayerBoxChange(Sender: TObject);
-                              procedure Panel1Click(Sender: TObject);
-                              procedure ActiveLayerColorExecute(Sender: TObject);
-                              procedure DeleteEmptyLayersExecute(Sender: TObject);
-                              procedure LayerDialogExecute(Sender: TObject);
-                              procedure NewModelExecute(Sender: TObject);
-                              procedure FormCreate(Sender: TObject);
-                              procedure ShowStationsExecute(Sender: TObject);
-                              procedure ShowButtocksExecute(Sender: TObject);
-                              procedure ShowWaterlinesExecute(Sender: TObject);
-                              procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-                              procedure NewFaceExecute(Sender: TObject);
-                              procedure IntersectionDialogExecute(Sender: TObject);
-                              procedure EdgeExtrudeExecute(Sender: TObject);
-                              procedure About1Click(Sender: TObject);
-                              procedure Help1Click(Sender: TObject);
-                              procedure EdgeSplitExecute(Sender: TObject);
-                              procedure ExportFEFExecute(Sender: TObject);
-                              procedure EditProjectSettingsExecute(Sender: TObject);
-                              procedure CheckModelExecute(Sender: TObject);
-                              procedure ShowNormalsExecute(Sender: TObject);
-                              procedure DesignHydrostaticsExecute(Sender: TObject);
-                              procedure ImportVRMLExecute(Sender: TObject);
-                              procedure RemoveNegativeExecute(Sender: TObject);
-                              procedure RotateModelExecute(Sender: TObject);
-                              procedure RotateModelMExecute(Sender: TObject);
-                              procedure ScaleModelExecute(Sender: TObject);
-                              procedure ShowGridExecute(Sender: TObject);
-                              procedure UndoExecute(Sender: TObject);
-                              procedure FreeShipUpdateUndoData(Sender: TObject);
-                              procedure HydrostaticsDialogExecute(Sender: TObject);
-                              procedure ExportObjExecute(Sender: TObject);
-                              procedure InvertFaceExecute(Sender: TObject);
-                              procedure PreferencesExecute(Sender: TObject);
-                              procedure ImportBodyplanExecute(Sender: TObject);
-                              procedure ExportDXF3DPolylinesExecute(Sender: TObject);
-                              procedure ExportDXFFacesExecute(Sender: TObject);
-                              procedure ImportHullFileExecute(Sender: TObject);
-                              procedure ExportOffsetsExecute(Sender: TObject);
-                              procedure MoveModelExecute(Sender: TObject);
-                              procedure AddPointExecute(Sender: TObject);
-                              procedure DevelopLayersExecute(Sender: TObject);
-                              procedure ExportArchimedesExecute(Sender: TObject);
-                              procedure ShowLinesplanExecute(Sender: TObject);
-                              procedure ShowDiagonalsExecute(Sender: TObject);
-                              procedure FreeShipUpdateRecentFileList(Sender: TObject);
-                              procedure ImportCareneExecute(Sender: TObject);
-                              procedure ShowMarkersExecute(Sender: TObject);
-                              procedure DeleteMarkersExecute(Sender: TObject);
-                              procedure ImportSurfaceExecute(Sender: TObject);
-                              procedure ShowcurvatureExecute(Sender: TObject);
-                              procedure IncreaseCurvatureScaleExecute(Sender: TObject);
-                              procedure DecreaseCurvatureScaleExecute(Sender: TObject);
-                              procedure FileSaveExecute(Sender: TObject);
-                              procedure ImportChinesExecute(Sender: TObject);
-                              procedure ShowControlCurvesExecute(Sender: TObject);
-                              procedure NewCurveExecute(Sender: TObject);
-                              procedure ExportCoordinatesExecute(Sender: TObject);
-                              procedure InsertPlaneExecute(Sender: TObject);
-                              procedure PointsLockExecute(Sender: TObject);
-                              procedure PointsUnlockExecute(Sender: TObject);
-                              procedure PointsUnlockAllExecute(Sender: TObject);
-                              procedure ImportMarkersExecute(Sender: TObject);
-                              procedure ExportMichletExecute(Sender: TObject);
-                              procedure ExportAddMassExecute(Sender: TObject);							  
-                              procedure ResistanceKaperExecute(Sender: TObject);
-                              procedure ResistanceDelftExecute(Sender: TObject);
-                              procedure ResistanceHoltrExecute(Sender: TObject);
-                              procedure ResistanceHollenExecute(Sender: TObject);
-                              procedure ResistanceOortmerExecute(Sender: TObject);
-                              procedure ResistanceFungLeibExecute(Sender: TObject);
-                              procedure ResistanceOSTExecute(Sender: TObject);
-                              procedure ResistanceRBHSExecute(Sender: TObject);
-                              procedure ResistanceMHExecute(Sender: TObject);							  
-                              procedure ResistancePlaningExecute(Sender: TObject);
-                              procedure PropTask1Execute(Sender: TObject);
-                              procedure PropTask2Execute(Sender: TObject);
-                              procedure PropTask3Execute(Sender: TObject);
-                              procedure PropTask4Execute(Sender: TObject);
-                              procedure PropTask5Execute(Sender: TObject);
-                              Procedure PropTaskRvrsExecute(Sender: TObject);
-                              Procedure HydrodynManeuvExecute(Sender: TObject);							  
-                              procedure HydrodynTask1Execute(Sender: TObject);
-                              procedure HydrodynTask2Execute(Sender: TObject);
-                              procedure HydrodynTask3Execute(Sender: TObject);
-                              procedure HydrodynTask4Execute(Sender: TObject);							  
-                              procedure FreeShipChangeCursorIncrement(Sender: TObject);
-                              procedure Panel3Click(Sender: TObject);
-                              procedure PointAlignExecute(Sender: TObject);
-                              procedure ImportMichletWavesExecute(Sender: TObject);
-                              procedure ShowHydrostaticsExecute(Sender: TObject);
-                              procedure MirrorFaceExecute(Sender: TObject);
-                              procedure ExportDXF2DPolylinesExecute(Sender: TObject);
-                              procedure FreeShipUpdateGeometryInfo(Sender: TObject);
-                              procedure TransformLackenbyExecute(Sender: TObject);
-                              procedure ExportIGESExecute(Sender: TObject);
-                              procedure ExportPartExecute(Sender: TObject);
-                              procedure ImportPartExecute(Sender: TObject);
-                              procedure LayerIntersectionExecute(Sender: TObject);
+    procedure LoadFileExecute(Sender   : TObject);
+    procedure ExitProgramExecute(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure ShowControlNetExecute(Sender: TObject);
+    procedure ShowInteriorEdgesExecute(Sender: TObject);
+    procedure NewWindowExecute(Sender: TObject);
+    procedure SpinEditFontSizeChange(Sender: TObject);
+    procedure TileWindowExecute(Sender: TObject);
+    procedure CascadeWindowExecute(Sender: TObject);
+    procedure BothSidesExecute(Sender: TObject);
+    procedure FreeShipFileChanged(Sender: TObject);
+    //procedure PrecisionBoxChange(Sender: TObject);
+    procedure FileSaveasExecute(Sender: TObject);
+    procedure LayerAutoGroupExecute(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure NewLayerExecute(Sender: TObject);
+    procedure DeleteExecute(Sender: TObject);
+    procedure EdgeCollapseExecute(Sender: TObject);
+    procedure NewEdgeExecute(Sender: TObject);
+    procedure ImportFEFExecute(Sender: TObject);
+    procedure EdgeCreaseExecute(Sender: TObject);
+    procedure DeselectAllExecute(Sender: TObject);
+    procedure PointCollapseExecute(Sender: TObject);
+    procedure LayerBoxChange(Sender: TObject);
+    procedure PanelActiveLayerColorClick(Sender: TObject);
+    procedure ActiveLayerColorExecute(Sender: TObject);
+    procedure DeleteEmptyLayersExecute(Sender: TObject);
+    procedure LayerDialogExecute(Sender: TObject);
+    procedure NewModelExecute(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure ShowStationsExecute(Sender: TObject);
+    procedure ShowButtocksExecute(Sender: TObject);
+    procedure ShowWaterlinesExecute(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure NewFaceExecute(Sender: TObject);
+    procedure IntersectionDialogExecute(Sender: TObject);
+    procedure EdgeExtrudeExecute(Sender: TObject);
+    procedure About1Click(Sender: TObject);
+    procedure Help1Click(Sender: TObject);
+    procedure EdgeSplitExecute(Sender: TObject);
+    procedure ExportFEFExecute(Sender: TObject);
+    procedure EditProjectSettingsExecute(Sender: TObject);
+    procedure CheckModelExecute(Sender: TObject);
+    procedure ShowNormalsExecute(Sender: TObject);
+    procedure DesignHydrostaticsExecute(Sender: TObject);
+    procedure ImportVRMLExecute(Sender: TObject);
+    procedure RemoveNegativeExecute(Sender: TObject);
+    procedure RotateModelExecute(Sender: TObject);
+    procedure RotateModelMExecute(Sender: TObject);
+    procedure ScaleModelExecute(Sender: TObject);
+    procedure ShowGridExecute(Sender: TObject);
+    procedure ToolButtonSelectClick(Sender: TObject);
+    procedure UndoExecute(Sender: TObject);
+    procedure FreeShipUpdateUndoData(Sender: TObject);
+    procedure HydrostaticsDialogExecute(Sender: TObject);
+    procedure ExportObjExecute(Sender: TObject);
+    procedure InvertFaceExecute(Sender: TObject);
+    procedure PreferencesExecute(Sender: TObject);
+    procedure ImportBodyplanExecute(Sender: TObject);
+    procedure ExportDXF3DPolylinesExecute(Sender: TObject);
+    procedure ExportDXFFacesExecute(Sender: TObject);
+    procedure ImportHullFileExecute(Sender: TObject);
+    procedure ExportOffsetsExecute(Sender: TObject);
+    procedure MoveModelExecute(Sender: TObject);
+    procedure AddPointExecute(Sender: TObject);
+    procedure DevelopLayersExecute(Sender: TObject);
+    procedure ExportArchimedesExecute(Sender: TObject);
+    procedure ShowLinesplanExecute(Sender: TObject);
+    procedure ShowDiagonalsExecute(Sender: TObject);
+    procedure FreeShipUpdateRecentFileList(Sender: TObject);
+    procedure ImportCareneExecute(Sender: TObject);
+    procedure ShowMarkersExecute(Sender: TObject);
+    procedure DeleteMarkersExecute(Sender: TObject);
+    procedure ImportSurfaceExecute(Sender: TObject);
+    procedure ShowcurvatureExecute(Sender: TObject);
+    procedure IncreaseCurvatureScaleExecute(Sender: TObject);
+    procedure DecreaseCurvatureScaleExecute(Sender: TObject);
+    procedure FileSaveExecute(Sender: TObject);
+    procedure ImportChinesExecute(Sender: TObject);
+    procedure ShowControlCurvesExecute(Sender: TObject);
+    procedure NewCurveExecute(Sender: TObject);
+    procedure ExportCoordinatesExecute(Sender: TObject);
+    procedure InsertPlaneExecute(Sender: TObject);
+    procedure PointsLockExecute(Sender: TObject);
+    procedure PointsUnlockExecute(Sender: TObject);
+    procedure PointsUnlockAllExecute(Sender: TObject);
+    procedure ImportMarkersExecute(Sender: TObject);
+    procedure ExportMichletExecute(Sender: TObject);
+    procedure ExportAddMassExecute(Sender: TObject);
+    procedure ResistanceKaperExecute(Sender: TObject);
+    procedure ResistanceDelftExecute(Sender: TObject);
+    procedure ResistanceHoltrExecute(Sender: TObject);
+    procedure ResistanceHollenExecute(Sender: TObject);
+    procedure ResistanceOortmerExecute(Sender: TObject);
+    procedure ResistanceFungLeibExecute(Sender: TObject);
+    procedure ResistanceOSTExecute(Sender: TObject);
+    procedure ResistanceRBHSExecute(Sender: TObject);
+    procedure ResistanceMHExecute(Sender: TObject);
+    procedure ResistancePlaningExecute(Sender: TObject);
+    procedure PropTask1Execute(Sender: TObject);
+    procedure PropTask2Execute(Sender: TObject);
+    procedure PropTask3Execute(Sender: TObject);
+    procedure PropTask4Execute(Sender: TObject);
+    procedure PropTask5Execute(Sender: TObject);
+    Procedure PropTaskRvrsExecute(Sender: TObject);
+    Procedure HydrodynManeuvExecute(Sender: TObject);
+    procedure HydrodynTask1Execute(Sender: TObject);
+    procedure HydrodynTask2Execute(Sender: TObject);
+    procedure HydrodynTask3Execute(Sender: TObject);
+    procedure HydrodynTask4Execute(Sender: TObject);
+    procedure FreeShipChangeCursorIncrement(Sender: TObject);
+    procedure Panel3Click(Sender: TObject);
+    procedure PointAlignExecute(Sender: TObject);
+    procedure ImportMichletWavesExecute(Sender: TObject);
+    procedure ShowHydrostaticsExecute(Sender: TObject);
+    procedure MirrorFaceExecute(Sender: TObject);
+    procedure ExportDXF2DPolylinesExecute(Sender: TObject);
+    procedure FreeShipUpdateGeometryInfo(Sender: TObject);
+    procedure TransformLackenbyExecute(Sender: TObject);
+    procedure ExportIGESExecute(Sender: TObject);
+    procedure ExportPartExecute(Sender: TObject);
+    procedure ImportPartExecute(Sender: TObject);
+    procedure LayerIntersectionExecute(Sender: TObject);
     procedure KeelRudderWizardExecute(Sender: TObject);
     procedure RedoExecute(Sender: TObject);
     procedure ClearUndoExecute(Sender: TObject);
@@ -555,7 +571,23 @@ type
     procedure SelectLeakPointsExecute(Sender: TObject);
     procedure LoadMostRecentFile;
     procedure LoadNamedFile(FileName:string);
+    procedure dumpIcons;
+    procedure LoadToolIcons;
+    function  getToolbarControlsWidth(tb:TToolBar): integer;
+    function  getAllToolbarsControlWidth: integer;
+    procedure AlignAllToolbars;
+    procedure SetAllActionsEnabled(val : boolean);
    private    { Private declarations }
+      FAllToolbarsControlsWidth : integer;
+      FToolBarFileControlsWidth : integer;
+      FToolBarVisibilityControlsWidth : integer;
+      FToolBarLayersControlsWidth : integer;
+      FToolBarPointsControlsWidth : integer;
+      FToolBarEditControlsWidth : integer;
+      FToolBarEdgesControlsWidth : integer;
+      FToolBarFacesControlsWidth : integer;
+      FToolBarCurvesControlsWidth : integer;
+
       procedure FLoadRecentFile(sender:TObject);
       procedure FreeShipChangeLayerData(Sender: TObject);
       procedure FreeShipChangeActiveLayer(Sender: TObject;Layer: TFreeSubdivisionLayer);
@@ -593,11 +625,68 @@ uses FreeSplashWndw,
   {$R *.lfm}
 {$ENDIF}
 
+procedure SortControlsByXY(tb:TWinControl);
+var c1,c2: TControl; i,j, t1,t2, l1,l2:integer;
+begin
+  {
+  Writeln();
+  Writeln(tb.Name);
+  for i:=0 to tb.ControlCount-1 do
+   with tb.Controls[i] do
+    Writeln( Name, ' t:',Top, ' l:', Left);
+   }
+  i:=0;
+  while i <= tb.ControlCount-2 do
+   begin
+   j:=1;
+   while j <= tb.ControlCount-1 do
+      begin
+      c1 := tb.Controls[j-1];
+      c2 := tb.Controls[j];
+      t1:=c1.Top; t2:=c2.Top;
+      l1:=c1.Left; l2:=c2.Left;
+      if c1.Top > c2.Top then
+        begin
+          tb.RemoveControl(c2);
+          tb.InsertControl(c2,j-1);
+        end
+      else
+        if (c1.Top = c2.Top) and (c1.Left > c2.Left) then
+          begin
+            tb.RemoveControl(c2);
+            tb.InsertControl(c2,j-1);
+          end
+        else
+          inc(j);
+      end;
+    inc(i);
+    end;
+ {
+  Writeln();
+  Writeln(tb.Name);
+  for i:=0 to tb.ControlCount-1 do
+   with tb.Controls[i] do
+    Writeln( Name, ' t:',Top, ' l:', Left);
+    }
+end;
+
+
 constructor TMainForm.Create(AOwner: TComponent);
 begin
  inherited Create(AOwner);
  FMDIChildList := TList.Create;
  FFileName:='';
+
+ SortControlsByXY(PanelMain);
+
+ SortControlsByXY(ToolBarFile);
+ SortControlsByXY(ToolBarVisibility);
+ SortControlsByXY(ToolBarLayers);
+ SortControlsByXY(ToolBarPoints);
+ SortControlsByXY(ToolBarEdit);
+ SortControlsByXY(ToolBarEdges);
+ SortControlsByXY(ToolBarFaces);
+ SortControlsByXY(ToolBarCurves);
 end;
 
 destructor TMainForm.Destroy;
@@ -610,10 +699,171 @@ begin
 end;
 
 procedure TMainForm.FormChangeBounds(Sender: TObject);
-var t : integer;
 begin
-    t := Top;
 end;
+
+procedure TMainForm.FormResize(Sender: TObject);
+begin
+  if Self.IsResizing then exit;
+  PanelMain.Invalidate;
+  Application.ProcessMessages;
+  AlignAllToolbars;
+end;
+
+procedure TMainForm.FormWindowStateChange(Sender: TObject);
+begin
+ // this is just to kick toolbar to autoresize
+ Self.Height:=Self.Height+1;
+ Self.Resize;
+ Self.Height:=Self.Height-1;
+ Self.Resize;
+ Self.Invalidate;
+end;
+
+// total width of all controls in toolbar
+function TMainForm.getToolbarControlsWidth(tb:TToolBar): integer;
+var i:integer; c: TControl;
+begin
+  result := 0;
+  for i:=0 to tb.ControlCount-1 do
+    begin
+      c := tb.Controls[i];
+      result := result + c.Width + c.BorderSpacing.Right+c.BorderSpacing.Left+c.BorderSpacing.Around;
+    end;
+end;
+
+function TMainForm.getAllToolbarsControlWidth: integer;
+begin
+  FToolBarFileControlsWidth := getToolbarControlsWidth(ToolBarFile);
+  FToolBarVisibilityControlsWidth := getToolbarControlsWidth(ToolBarVisibility);
+  FToolBarLayersControlsWidth := getToolbarControlsWidth(ToolBarLayers);
+  FToolBarPointsControlsWidth := getToolbarControlsWidth(ToolBarPoints);
+  FToolBarEditControlsWidth := getToolbarControlsWidth(ToolBarEdit);
+  FToolBarEdgesControlsWidth := getToolbarControlsWidth(ToolBarEdges);
+  FToolBarFacesControlsWidth := getToolbarControlsWidth(ToolBarFaces);
+  FToolBarCurvesControlsWidth := getToolbarControlsWidth(ToolBarCurves);
+
+  FAllToolbarsControlsWidth :=
+    FToolBarFileControlsWidth +
+    FToolBarVisibilityControlsWidth +
+    FToolBarLayersControlsWidth +
+    FToolBarPointsControlsWidth +
+    FToolBarEditControlsWidth +
+    FToolBarEdgesControlsWidth +
+    FToolBarFacesControlsWidth +
+    FToolBarCurvesControlsWidth;
+
+  result := FAllToolbarsControlsWidth;
+end;
+
+procedure TMainForm.AlignAllToolbars;
+var AllW, lft, gap:integer;
+    // max bottom Y of all controls in toolbar
+    function getToolbarControlsBottom(tb:TToolBar): integer;
+    var i:integer; c: TControl;
+    begin
+      result := 0;
+      for i:=0 to tb.ControlCount-1 do
+        begin
+          c := tb.Controls[i];
+          result := max(result, c.BoundsRect.Bottom + c.BorderSpacing.Bottom+c.BorderSpacing.Around);
+        end;
+    end;
+
+    // max right X of all controls in toolbar
+    function getToolbarControlsRight(tb:TToolBar): integer;
+    var i:integer; c: TControl;
+    begin
+      result := 0;
+      for i:=0 to tb.ControlCount-1 do
+        begin
+          c := tb.Controls[i];
+          result := max(result, c.BoundsRect.Right + c.BorderSpacing.Right+c.BorderSpacing.Around);
+        end;
+    end;
+
+    // max right of a control in toolbar smaller than X
+    function getToolbarXtrunc(tb:TToolBar; X:integer): integer;
+    var i,r:integer; c: TControl;
+    begin
+      result := 0; r:=0;
+      i:=0;
+      while (i<=tb.ControlCount-1) do
+        begin
+          c := tb.Controls[i];
+          r := r + c.Width + c.BorderSpacing.Right+c.BorderSpacing.Around;
+          if (r<=X)
+            then result := max(result,r);
+          inc(i);
+        end;
+    end;
+
+    function alignToolbar(tb:TToolBar; tbcw, lft, wdth, cnt: integer): integer;
+    var tbch, r,w,bw :integer; c: TControl; b:TToolButton;
+    begin
+      tb.Top:=0;
+      tb.Parent.Left:=lft;
+      //tbcw := getToolbarControlsWidth(tb);
+      //if tb.Name='ToolBarFile'
+      //   then c:=c;
+      bw := tb.ButtonWidth;
+      b := tb.Buttons[0];
+      bw := b.Width;
+
+      // leave some space (bw+4)*cnt
+      w:=round((wdth) * (tbcw / (FAllToolbarsControlsWidth)));
+
+      //tb.Width := w;
+      r:=getToolbarXtrunc(tb,w);
+      if (lft+r)>(wdth-(bw+4)*cnt)
+        then r:=getToolbarXtrunc(tb,r-bw);
+
+      tb.Width := max(r+4, bw+4);
+
+      //tb.Height := 16;
+      tb.ReAlign;
+      tb.Invalidate;
+      //tb.Width := getToolbarControlsRight(tb)+4;
+      //tb.ReAlign;
+      Application.ProcessMessages;
+      tbch:=getToolbarControlsBottom(tb);
+      tb.Height := tbch + 4;
+      //tb.Parent.Height := tb.Height;
+      //tb.Parent.Width := tb.Width;
+      //tb.InvalidatePreferredSize;
+      //Application.ProcessMessages;
+      result:=tb.Parent.BoundsRect.Right;
+    end;
+
+begin
+  gap:=4;
+  if FAllToolbarsControlsWidth=0
+   then FAllToolbarsControlsWidth:=getAllToolbarsControlWidth;
+  lft:=gap;
+
+  lft := alignToolbar(ToolBarFile, FToolBarFileControlsWidth, lft+gap, PanelMain.Width, 7);
+  lft := alignToolbar(ToolBarEdit, FToolBarEditControlsWidth, lft+gap, PanelMain.Width, 6);
+  lft := alignToolbar(ToolBarVisibility, FToolBarVisibilityControlsWidth, lft+gap, PanelMain.Width, 5);
+  lft := alignToolbar(ToolBarLayers, FToolBarLayersControlsWidth, lft+gap, PanelMain.Width, 4);
+  lft := alignToolbar(ToolBarPoints, FToolBarPointsControlsWidth, lft+gap, PanelMain.Width, 3);
+  lft := alignToolbar(ToolBarEdges, FToolBarEdgesControlsWidth, lft+gap, PanelMain.Width, 2);
+  lft := alignToolbar(ToolBarFaces, FToolBarFacesControlsWidth, lft+gap, PanelMain.Width, 1);
+  lft := alignToolbar(ToolBarCurves, FToolBarCurvesControlsWidth, lft+gap, PanelMain.Width, 0);
+
+  {
+  //make all toolbars uniform height
+  ToolBarFile.Height:=PanelMain.Height-2;
+  ToolBarEdit.Height:=PanelMain.Height-2;
+  ToolBarVisibility.Height:=PanelMain.Height-2;
+  ToolBarLayers.Height:=PanelMain.Height-2;
+  ToolBarPoints.Height:=PanelMain.Height-2;
+  ToolBarEdges.Height:=PanelMain.Height-2;
+  ToolBarFaces.Height:=PanelMain.Height-2;
+  ToolBarCurves.Height:=PanelMain.Height-2;
+   }
+  ToolBarMain.Height:=PanelMain.Height;
+end;
+
 
 var inActivation: boolean = false;
 
@@ -718,6 +968,16 @@ begin
    // End Skip translation
 end;{TMainForm.SetCaption}
 
+procedure TMainForm.SetAllActionsEnabled(val : boolean);
+var i: integer; A: TAction;
+begin
+  for i:=0 to ActionList1.ActionCount-1 do
+  begin
+    A := TAction(ActionList1.Actions[i]);
+    A.Enabled:=val;
+  end;
+end;
+
 procedure TMainForm.UpdateMenu;
 var I       : Integer;
     NLayers : Integer;
@@ -728,9 +988,33 @@ var I       : Integer;
 begin
    NLayers:=0;
    For I:=1 to Freeship.NumberOfLayers do if Freeship.Layer[I-1].Count>0 then inc(NLayers);
+
+   {
+   // disable almost all actions if model was not loaded for some reason
+   if not Freeship.ModelLoaded then
+     begin
+        FreeShip.Filename:='MODEL NOT LOADED!';
+        FreeShip.FilenameSet:=false;
+
+        SetAllActionsEnabled(false);
+
+        NewModel.Enabled:=true;
+        LoadFile.Enabled:=true;
+        ExitProgram.Enabled:=true;
+        HelpAction.Enabled:=true;
+        AboutAction.Enabled:=true;
+
+        //ImportFEF.Enabled:=true;
+        //ImportCarene.Enabled:=true;
+        //ImportVRML.Enabled:=true;
+        //ImportHullFile.Enabled:=true;
+     end;
+    }
+
    // File menu
    FileSaveas.Enabled:=(FreeShip.Surface.NumberOfControlPoints>0) or (Freeship.FileChanged) or (Freeship.FilenameSet);
    FileSave.Enabled:=(FileSaveas.Enabled) and (Freeship.FilenameSet);
+
    ImportMichletWaves1.Enabled:=(MDIChildCount>0) and (Freeship.Surface.NumberOfControlFaces>1);
    ExportFEF.Enabled:=Freeship.Surface.NumberOfControlPoints>0;
    ExportObj.Enabled:=Freeship.Surface.NumberOfControlFaces>0;
@@ -817,17 +1101,19 @@ begin
    TileWindow.Enabled:=MDIChildCount>0;
    CascadeWindow.Enabled:=MDIChildCount>0;
    // Precision
-   PrecisionBox.ItemIndex:=Ord(FreeShip.Precision);
+   //PrecisionBox.ItemIndex:=Ord(FreeShip.Precision);
    // Layers
    LayerAutoGroup.Enabled:=(Freeship.Surface.NumberOfControlFaces>1) and (FreeShip.Visibility.ShowInteriorEdges);
    // Tools
    CheckModel.Enabled:=FreeShip.Surface.NumberOfControlFaces>0;
    DevelopLayers.Enabled:=False;
-   for I:=1 to FreeShip.NumberOfLayers do if (FreeShip.Layer[I-1].Developable) and (FreeShip.Layer[I-1].Count>0) then
-   begin
-      DevelopLayers.Enabled:=True;
-      break;
-   end;
+   for I:=1 to FreeShip.NumberOfLayers do
+     if (FreeShip.Layer[I-1].Developable) and (FreeShip.Layer[I-1].Count>0)
+     then
+       begin
+          DevelopLayers.Enabled:=True;
+          break;
+       end;
    KeelRudderWizard.Enabled:=MDIChildCount>0;
    DeleteMarkers.Enabled:=Freeship.NumberofMarkers>0;
    // Calculations
@@ -846,11 +1132,12 @@ begin
    NewCurve.Enabled:=FreeShip.NumberOfSelectedControlEdges>0;
    PointCollapse.Enabled:=Freeship.NumberOfSelectedControlPoints>0;
    DeleteEmptyLayers.Enabled:=False;
-   for I:=1 to Freeship.NumberOfLayers do if (FreeShip.Layer[I-1].Count=0) and (FreeShip.NumberOfLayers>0) then
-   begin
-      DeleteEmptyLayers.Enabled:=True;
-      break;
-   end;
+   for I:=1 to Freeship.NumberOfLayers do
+     if (FreeShip.ModelLoaded) and (FreeShip.Layer[I-1].Count=0) and (FreeShip.NumberOfLayers>0) then
+       begin
+          DeleteEmptyLayers.Enabled:=True;
+          break;
+       end;
    RemoveUnusedPoints.Enabled:=False;
    for I:=1 to Freeship.Surface.NumberOfControlPoints do if Freeship.Surface.ControlPoint[I-1].NumberOfFaces=0 then
    begin
@@ -939,8 +1226,10 @@ if FileExistsUTF8('Sterns.txt') { *Converted from FileExists* } then DeleteFileU
 end;{TMainForm.ExitProgramExecute}
 
 procedure TMainForm.FormShow(Sender: TObject);
+var FileExt: string;
 begin
-   self.WindowState := wsNormal;
+   self.WindowState:=wsNormal;
+   self.Position:=poScreenCenter;
 
    // Initialize some data
    FreeShip.OnChangeActiveLayer:=FreeShipChangeActiveLayer;
@@ -954,8 +1243,9 @@ begin
    else
    begin
       // Skip translation
+      FileExt := Uppercase(ExtractFileExt(FFileName));
       if (FileExistsUTF8(FFileName) { *Converted from FileExists* })
-        and (Uppercase(ExtractFileExt(FFileName))='.FBM') then
+        and ( (FileExt = '.FBM') or (FileExt = '.FTM') ) then
       begin
          FOpenHullWindows;
          FreeShip.Edit.File_Load(FFileName);
@@ -963,8 +1253,10 @@ begin
       // End Skip translation
    end;
    SetCaption;
+   LoadToolIcons;
    UpdateMenu;
 end;{TMainForm.FormShow}
+
 
 procedure TMainForm.ShowControlNetExecute(Sender: TObject);
 begin
@@ -991,12 +1283,24 @@ begin
    UpdateMenu;
 end;{TMainForm.NewWindowExecute}
 
+procedure TMainForm.SpinEditFontSizeChange(Sender: TObject);
+var w: integer;  vp:TFreeViewport;
+begin
+  FreeShip.FontSize := SpinEditFontSize.value;
+  for w:=0 to FMDIChildList.Count-1 do
+  begin
+    vp := TFreeHullWindow(FMDIChildList.Items[w]).Viewport;
+    vp.invalidate;
+  end;
+end;
+
 {$IFDEF FPC}
 function TMainForm.GetMDIChildren(AIndex: Integer): TCustomForm;
 begin
   Result := nil;
   if not (FormStyle in [fsMDIForm, fsMDIChild]) then
     exit;
+  if AIndex > FMDIChildList.Count -1 then exit;
   Result := TCustomForm(FMDIChildList.Items[AIndex]) ;
 end;
 
@@ -1102,11 +1406,13 @@ begin
    SetCaption;
 end;{TMainForm.FreeShipFileChanged}
 
+{ //moved to TFREEProjectSettingsDialog
 procedure TMainForm.PrecisionBoxChange(Sender: TObject);
 begin
    FreeShip.Precision:=TFreePrecisionType(PrecisionBox.ItemIndex);
    UpdateMenu;
-end;{TMainForm.PrecisionBoxChange}
+end;}{TMainForm.PrecisionBoxChange}
+
 
 procedure TMainForm.FileSaveasExecute(Sender: TObject);
 begin
@@ -1219,12 +1525,12 @@ begin
       begin
          Index:=-1;
          Layerbox.ItemIndex:=Index;
-         Panel1.Color:=clBtnface;
+         PanelActiveLayerColor.Color:=clBtnface;
       end else
       begin
          Index:=Layerbox.Items.IndexOfObject(Layer);
          Layerbox.ItemIndex:=Index;
-         Panel1.Color:=Layer.Color;
+         PanelActiveLayerColor.Color:=Layer.Color;
       end;
    end;
 end;{TMainForm.FreeShipChangeActiveLayer}
@@ -1309,7 +1615,7 @@ begin
    UpdateMenu;
 end;{TMainForm.LayerBoxChange}
 
-procedure TMainForm.Panel1Click(Sender: TObject);
+procedure TMainForm.PanelActiveLayerColorClick(Sender: TObject);
 begin
    ActiveLayerColorExecute(self);
 end;{TMainForm.Panel1Click}
@@ -1357,6 +1663,8 @@ begin
    if self.Align = alTop
      then self.Top := 0;
    {$endif}
+   FAllToolbarsControlsWidth := 0;
+   //dumpIcons;
 end;{TMainForm.FormCreate}
 
 procedure TMainForm.ShowStationsExecute(Sender: TObject);
@@ -1573,6 +1881,10 @@ begin
    UpdateMenu;
 end;{TMainForm.ShowGridExecute}
 
+procedure TMainForm.ToolButtonSelectClick(Sender: TObject);
+begin
+end;
+
 procedure TMainForm.UndoExecute(Sender: TObject);
 begin
    FreeShip.Edit.Undo;
@@ -1614,6 +1926,7 @@ procedure TMainForm.PreferencesExecute(Sender: TObject);
 begin
    FreeShip.Preferences.Edit;
    UpdateMenu;
+   LoadToolIcons;
 end;{TMainForm.PreferencesExecute}
 
 procedure TMainForm.ImportBodyplanExecute(Sender: TObject);
@@ -2146,6 +2459,52 @@ procedure TMainForm.SelectLeakPointsExecute(Sender: TObject);
 begin
   Freeship.Edit.Selection_SelectLeakPoints;
   UpdateMenu;
+end;
+
+{ this is used just once to dump menu/toolbutton icons }
+procedure TMainForm.dumpIcons;
+begin
+  Freeship.Preferences.dumpIcons(MenuImages,ActionList1);
+end;
+
+// loads icons from FMenuIconDirectory that is set according to theme and icon size
+procedure TMainForm.LoadToolIcons;
+var i, II, sz, ilcnt:integer;
+    A: TAction; AName, IName, IPath, IconFile:String;
+    cil: TCustomImageList;
+    bmp:TBitmap; png: TPortableNetworkGraphic; img: TLazIntfImage;
+
+    procedure setToolBarButtonSize(ToolBar: TToolBar; sz: integer);
+    begin
+      ToolBar.ButtonHeight:= sz + (sz div 16)*2;
+      ToolBar.ButtonWidth := sz + (sz div 16)*2;
+      //ToolBar.Parent.Width := ToolBar.Width;
+      //ToolBar.Parent.Height := ToolBar.Height;
+    end;
+
+begin
+  FreeShip.preferences.LoadImageListByActions(MenuImages, ActionList1);
+
+  sz := Freeship.Preferences.ToolIconSize;
+
+  setToolBarButtonSize(ToolBarFile, sz);
+  setToolBarButtonSize(ToolBarVisibility, sz);
+  setToolBarButtonSize(ToolBarLayers, sz);
+  setToolBarButtonSize(ToolBarPoints, sz);
+  setToolBarButtonSize(ToolBarEdit, sz);
+  setToolBarButtonSize(ToolBarEdges, sz);
+  setToolBarButtonSize(ToolBarFaces, sz);
+  setToolBarButtonSize(ToolBarCurves, sz);
+
+  FAllToolbarsControlsWidth := getAllToolbarsControlWidth;
+  AlignAllToolbars;
+
+  // this is just to kick toolbar to autoresize
+  Self.Height:=Self.Height+1;
+  Self.Resize;
+  Self.Height:=Self.Height-1;
+  Self.Resize;
+  Self.Invalidate;
 end;
 
 
